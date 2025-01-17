@@ -441,27 +441,41 @@ class YamlEditorApp:
                         if prop_in_line == selected_prop:
                             # 获取完整的值（包括所有后续行）
                             value_lines = []
-                            # 获取第一行的完整内容（包括冒号和空格）
-                            first_line = line.split(":", 1)[1]
-                            value_lines.append(first_line.rstrip('\n'))
+                            # 获取第一行的值（包括冒号后的所有内容，但不包括属性名和冒号）
+                            colon_pos = line.find(':')
+                            if colon_pos != -1:
+                                first_line = line[colon_pos + 1:].rstrip('\n')  # 保留冒号后的所有内容
+                                value_lines.append(first_line)
                             
                             # 检查后续行
                             next_line_idx = i + 1
+                            last_content_line = i  # 记录最后一个有内容的行
+                            empty_lines_count = 0  # 计数空行数量
+                            
                             while next_line_idx < len(lines):
-                                next_line = lines[next_line_idx]
-                                next_indent = len(next_line) - len(next_line.lstrip())
-                                
-                                # 如果缩进小于等于当前属性的缩进，说明到了下一个属性
-                                if next_indent <= indent:
-                                    break
-                                
-                                # 添加原始行（保持空格和换行）
-                                value_lines.append(next_line.rstrip('\n'))
+                                next_line = lines[next_line_idx].rstrip('\n')
+                                if next_line.strip():  # 如果是非空行
+                                    next_indent = len(next_line) - len(next_line.lstrip())
+                                    if next_indent <= indent:  # 如果缩进小于等于当前属性，说明到了下一个属性
+                                        break
+                                    value_lines.append(next_line)
+                                    last_content_line = next_line_idx
+                                    empty_lines_count = 0  # 重置空行计数
+                                else:  # 空行处理
+                                    if empty_lines_count < 10:  # 限制最多10个空行
+                                        value_lines.append(next_line)
+                                        empty_lines_count += 1
+                                    else:
+                                        break
                                 next_line_idx += 1
                             
-                            # 合并所有行并显示
+                            # 合并所有行并显示（保持原始格式）
+                            full_content = '\n'.join(value_lines)
+                            if not full_content.endswith('\n'):
+                                full_content += '\n'  # 确保最后有换行符
+                            
                             self.current_value.delete('1.0', tk.END)
-                            self.current_value.insert('1.0', '\n'.join(value_lines))
+                            self.current_value.insert('1.0', full_content)
                             break
 
     def update_value(self):
@@ -469,11 +483,14 @@ class YamlEditorApp:
         selected_sub = self.sub_category_var.get()
         selected_prop = self.property_var.get()
         selected_item_prop = self.item_sub_property_var.get()
-        new_value = self.current_value.get('1.0', 'end-1c')
         
-        # 如果有多行，只保留第一行
-        if '\n' in new_value:
-            new_value = new_value.split('\n')[0]
+        # 获取当前值并处理
+        new_value = self.current_value.get('1.0', 'end-1c').strip()
+        
+        # 处理多行内容：移除所有空行和多余空格
+        lines = [line.strip() for line in new_value.splitlines() if line.strip()]
+        # 合并所有非空行
+        new_value = ' '.join(lines)
         
         try:
             for file_name, yaml_data in self.yaml_files.items():
@@ -507,7 +524,7 @@ class YamlEditorApp:
                             break
                 
                 # 处理属性值
-                if selected_prop and not selected_item_prop:
+                elif selected_prop:
                     in_main = False
                     in_sub = False
                     for i, line in enumerate(lines):
@@ -518,39 +535,37 @@ class YamlEditorApp:
                             in_sub = True
                             continue
                         if in_sub and selected_prop in line and ":" in line:
-                            indent = line[:line.find(selected_prop)]
-                            # 更新当前行
-                            lines[i] = f"{indent}{selected_prop}: {new_value}\n"
-                            # 删除后续的多行内容（如果有）
-                            next_line = i + 1
-                            while next_line < len(lines):
-                                if not lines[next_line].strip() or len(lines[next_line]) - len(lines[next_line].lstrip()) <= len(indent):
-                                    break
-                                lines.pop(next_line)
-                            yaml_data['TestCase'][selected_main][selected_sub][selected_prop] = new_value
-                            modified = True
-                            break
+                            prop_in_line = line.split(":")[0].strip()
+                            if prop_in_line == selected_prop:
+                                indent = line[:line.find(selected_prop)]
+                                lines[i] = f"{indent}{selected_prop}: {new_value}\n"
+                                
+                                # 删除后续的多余行（如果有的话）
+                                next_line_idx = i + 1
+                                while (next_line_idx < len(lines) and 
+                                       (not lines[next_line_idx].strip() or 
+                                        len(lines[next_line_idx]) - len(lines[next_line_idx].lstrip()) > len(indent))):
+                                    lines.pop(next_line_idx)
+                                
+                                if selected_item_prop:
+                                    yaml_data['TestCase'][selected_main][selected_sub][selected_prop][selected_item_prop] = new_value
+                                else:
+                                    yaml_data['TestCase'][selected_main][selected_sub][selected_prop] = new_value
+                                modified = True
+                                break
                 
                 if modified:
                     with open(file_name, 'w', encoding='utf-8') as f:
                         f.writelines(lines)
             
             self.status_var.set("更新成功")
-            self.show_current_value()
             
         except Exception as e:
             self.status_var.set(f"更新失败: {str(e)}")
 
     def on_text_change(self, event=None):
-        # 获取当前文本框中的所有内容
-        current_text = self.current_value.get('1.0', 'end-1c')
-        
-        # 如果包含换行符，只保留第一行
-        if '\n' in current_text:
-            first_line = current_text.split('\n')[0]
-            # 删除所有内容并插入第一行
-            self.current_value.delete('1.0', tk.END)
-            self.current_value.insert('1.0', first_line)
+        # 不再限制编辑行为，允许自由编辑多行内容
+        pass
 
 def main():
     root = TkinterDnD.Tk()
