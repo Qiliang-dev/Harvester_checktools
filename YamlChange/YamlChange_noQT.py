@@ -4,8 +4,6 @@ import os
 import yaml
 from typing import Dict, List
 from tkinterdnd2 import *
-from ruamel.yaml import YAML
-import re
 
 class YamlEditorApp:
     def __init__(self, root):
@@ -18,6 +16,9 @@ class YamlEditorApp:
         self.current_yaml_data = None
         
         self.setup_ui()
+        
+        # 绑定文本变化事件
+        self.current_value.bind('<KeyRelease>', self.on_text_change)
         
     def setup_ui(self):
         # Create the main frame
@@ -401,9 +402,28 @@ class YamlEditorApp:
                         if indent > current_indent:  # 确保是Item下的属性
                             prop_in_line = line.split(":")[0].strip()
                             if prop_in_line == selected_item_prop:
-                                value = line.split(":", 1)[1].strip()
+                                value_lines = []
+                                # 获取第一行的完整内容（包括冒号和空格）
+                                first_line = line.split(":", 1)[1]
+                                value_lines.append(first_line.rstrip('\n'))
+                                
+                                # 检查后续行
+                                next_line_idx = i + 1
+                                while next_line_idx < len(lines):
+                                    next_line = lines[next_line_idx]
+                                    next_indent = len(next_line) - len(next_line.lstrip())
+                                    
+                                    # 如果缩进小于等于当前属性的缩进，说明到了下一个属性
+                                    if next_indent <= indent:
+                                        break
+                                    
+                                    # 添加原始行（保持空格和换行）
+                                    value_lines.append(next_line.rstrip('\n'))
+                                    next_line_idx += 1
+                                
+                                # 合并所有行并显示
                                 self.current_value.delete('1.0', tk.END)
-                                self.current_value.insert('1.0', value)
+                                self.current_value.insert('1.0', '\n'.join(value_lines))
                                 break
                     if i > sub_start_line + 20:  # 防止过度搜索
                         break
@@ -419,12 +439,30 @@ class YamlEditorApp:
                     if indent == current_indent + 2:  # 确保是子类别直接下的属性
                         prop_in_line = line.split(":")[0].strip()
                         if prop_in_line == selected_prop:
-                            value = line.split(":", 1)[1].strip()
+                            # 获取完整的值（包括所有后续行）
+                            value_lines = []
+                            # 获取第一行的完整内容（包括冒号和空格）
+                            first_line = line.split(":", 1)[1]
+                            value_lines.append(first_line.rstrip('\n'))
+                            
+                            # 检查后续行
+                            next_line_idx = i + 1
+                            while next_line_idx < len(lines):
+                                next_line = lines[next_line_idx]
+                                next_indent = len(next_line) - len(next_line.lstrip())
+                                
+                                # 如果缩进小于等于当前属性的缩进，说明到了下一个属性
+                                if next_indent <= indent:
+                                    break
+                                
+                                # 添加原始行（保持空格和换行）
+                                value_lines.append(next_line.rstrip('\n'))
+                                next_line_idx += 1
+                            
+                            # 合并所有行并显示
                             self.current_value.delete('1.0', tk.END)
-                            self.current_value.insert('1.0', value)
+                            self.current_value.insert('1.0', '\n'.join(value_lines))
                             break
-                if i > sub_start_line + 20:  # 防止过度搜索
-                    break
 
     def update_value(self):
         selected_main = self.main_category_var.get()
@@ -432,6 +470,10 @@ class YamlEditorApp:
         selected_prop = self.property_var.get()
         selected_item_prop = self.item_sub_property_var.get()
         new_value = self.current_value.get('1.0', 'end-1c')
+        
+        # 如果有多行，只保留第一行
+        if '\n' in new_value:
+            new_value = new_value.split('\n')[0]
         
         try:
             for file_name, yaml_data in self.yaml_files.items():
@@ -465,7 +507,7 @@ class YamlEditorApp:
                             break
                 
                 # 处理属性值
-                elif selected_prop and not selected_item_prop:
+                if selected_prop and not selected_item_prop:
                     in_main = False
                     in_sub = False
                     for i, line in enumerate(lines):
@@ -477,7 +519,14 @@ class YamlEditorApp:
                             continue
                         if in_sub and selected_prop in line and ":" in line:
                             indent = line[:line.find(selected_prop)]
+                            # 更新当前行
                             lines[i] = f"{indent}{selected_prop}: {new_value}\n"
+                            # 删除后续的多行内容（如果有）
+                            next_line = i + 1
+                            while next_line < len(lines):
+                                if not lines[next_line].strip() or len(lines[next_line]) - len(lines[next_line].lstrip()) <= len(indent):
+                                    break
+                                lines.pop(next_line)
                             yaml_data['TestCase'][selected_main][selected_sub][selected_prop] = new_value
                             modified = True
                             break
@@ -491,6 +540,17 @@ class YamlEditorApp:
             
         except Exception as e:
             self.status_var.set(f"更新失败: {str(e)}")
+
+    def on_text_change(self, event=None):
+        # 获取当前文本框中的所有内容
+        current_text = self.current_value.get('1.0', 'end-1c')
+        
+        # 如果包含换行符，只保留第一行
+        if '\n' in current_text:
+            first_line = current_text.split('\n')[0]
+            # 删除所有内容并插入第一行
+            self.current_value.delete('1.0', tk.END)
+            self.current_value.insert('1.0', first_line)
 
 def main():
     root = TkinterDnD.Tk()
