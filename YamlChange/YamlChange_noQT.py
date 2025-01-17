@@ -383,114 +383,110 @@ class YamlEditorApp:
         if sub_start_line == -1:
             return
         
-        if selected_prop == "Item":
-            selected_item_prop = self.item_sub_property_var.get()
-            if selected_item_prop:
-                # Find the Item property within the sub-category
-                item_section_found = False
-                current_indent = None
-                for i in range(sub_start_line, len(lines)):
-                    line = lines[i]
-                    if not current_indent and line.strip():
-                        current_indent = len(line) - len(line.lstrip())
-                    if "Item:" in line and line.strip() == "Item:":
-                        item_section_found = True
-                        continue
-                    if item_section_found and selected_item_prop in line:
-                        indent = len(line) - len(line.lstrip())
-                        if indent > current_indent:  # 确保是Item下的属性
-                            prop_in_line = line.split(":")[0].strip()
-                            if prop_in_line == selected_item_prop:
-                                value = line.split(":", 1)[1].strip()
-                                self.current_value.delete('1.0', tk.END)
-                                self.current_value.insert('1.0', value)
-                                break
-                    if i > sub_start_line + 20:  # 防止过度搜索
+        # 在子类别中查找属性
+        current_indent = None
+        for i in range(sub_start_line, len(lines)):
+            line = lines[i]
+            if not current_indent and line.strip():
+                current_indent = len(line) - len(line.lstrip())
+            if selected_prop in line:
+                indent = len(line) - len(line.lstrip())
+                if indent == current_indent + 2:  # 确保是子类别直接下的属性
+                    prop_in_line = line.split(":")[0].strip()
+                    if prop_in_line == selected_prop:
+                        # 获取完整的值（包括所有后续行）
+                        value_lines = []
+                        # 获取第一行（包括冒号后的内容）
+                        first_value = line.split(":", 1)[1].lstrip()
+                        if first_value:  # 如果第一行有内容
+                            value_lines.append(first_value)
+                        
+                        # 检查后续行
+                        next_line_idx = i + 1
+                        while next_line_idx < len(lines):
+                            next_line = lines[next_line_idx]
+                            if not next_line.strip():  # 空行
+                                value_lines.append('')
+                            else:
+                                next_indent = len(next_line) - len(next_line.lstrip())
+                                if next_indent <= indent:  # 如果缩进小于等于当前属性，说明到了下一个属性
+                                    break
+                                value_lines.append(next_line.strip())
+                            next_line_idx += 1
+                        
+                        # 清除当前值并插入新值
+                        self.current_value.delete('1.0', tk.END)
+                        self.current_value.insert('1.0', '\n'.join(value_lines))
                         break
-        else:
-            # 在子类别中查找普通属性
-            current_indent = None
-            for i in range(sub_start_line, len(lines)):
-                line = lines[i]
-                if not current_indent and line.strip():
-                    current_indent = len(line) - len(line.lstrip())
-                if selected_prop in line:
-                    indent = len(line) - len(line.lstrip())
-                    if indent == current_indent + 2:  # 确保是子类别直接下的属性
-                        prop_in_line = line.split(":")[0].strip()
-                        if prop_in_line == selected_prop:
-                            value = line.split(":", 1)[1].strip()
-                            self.current_value.delete('1.0', tk.END)
-                            self.current_value.insert('1.0', value)
-                            break
-                if i > sub_start_line + 20:  # 防止过度搜索
-                    break
 
     def update_value(self):
         selected_main = self.main_category_var.get()
         selected_sub = self.sub_category_var.get()
         selected_prop = self.property_var.get()
-        selected_item_prop = self.item_sub_property_var.get()
-        new_value = self.current_value.get('1.0', 'end-1c')
+        new_value = self.current_value.get('1.0', 'end-1c').strip()  # 去除首尾空白
         
         try:
             for file_name, yaml_data in self.yaml_files.items():
                 with open(file_name, 'r', encoding='utf-8') as f:
                     lines = f.readlines()
                 
-                modified = False
+                modified_lines = []
+                i = 0
+                in_target_category = False
+                category_indent = None
                 
-                # 处理简单值（如 TestNotes）
-                if not selected_sub:
-                    for i, line in enumerate(lines):
-                        if line.strip().startswith(f"{selected_main}:"):
-                            indent = line[:line.find(selected_main)]
-                            lines[i] = f"{indent}{selected_main}: {new_value}\n"
-                            yaml_data['TestCase'][selected_main] = new_value
-                            modified = True
-                            break
-                
-                # 处理子类别的值
-                elif not selected_prop:
-                    in_main = False
-                    for i, line in enumerate(lines):
-                        if not in_main and line.strip() == f"{selected_main}:":
-                            in_main = True
+                while i < len(lines):
+                    line = lines[i]
+                    current_line = line.rstrip()  # 移除行尾空白
+                    
+                    # 检查是否进入目标子类别
+                    if not in_target_category and selected_sub in line and line.strip() == f"{selected_sub}:":
+                        in_target_category = True
+                        category_indent = len(line) - len(line.lstrip())
+                        modified_lines.append(current_line + '\n')
+                        i += 1
+                        continue
+                    
+                    # 检查是否离开目标子类别
+                    if in_target_category and line.strip():
+                        current_indent = len(line) - len(line.lstrip())
+                        if current_indent <= category_indent:
+                            in_target_category = False
+                    
+                    # 在目标类别内处理属性更新
+                    if in_target_category and selected_prop in line and ":" in line:
+                        prop_in_line = line.split(":")[0].strip()
+                        if prop_in_line == selected_prop:
+                            indent = len(line) - len(line.lstrip())
+                            indent_str = ' ' * indent
+                            
+                            # 添加更新的属性行
+                            modified_lines.append(f"{indent_str}{selected_prop}: {new_value}\n")
+                            
+                            # 跳过原有的多行值
+                            i += 1
+                            while i < len(lines):
+                                next_line = lines[i]
+                                if not next_line.strip() or len(next_line) - len(next_line.lstrip()) > indent:
+                                    i += 1
+                                else:
+                                    break
                             continue
-                        if in_main and selected_sub in line and ":" in line:
-                            indent = line[:line.find(selected_sub)]
-                            lines[i] = f"{indent}{selected_sub}: {new_value}\n"
-                            yaml_data['TestCase'][selected_main][selected_sub] = new_value
-                            modified = True
-                            break
+                    
+                    modified_lines.append(current_line + '\n')
+                    i += 1
                 
-                # 处理属性值
-                elif selected_prop and not selected_item_prop:
-                    in_main = False
-                    in_sub = False
-                    for i, line in enumerate(lines):
-                        if not in_main and line.strip() == f"{selected_main}:":
-                            in_main = True
-                            continue
-                        if in_main and not in_sub and line.strip() == f"{selected_sub}:":
-                            in_sub = True
-                            continue
-                        if in_sub and selected_prop in line and ":" in line:
-                            indent = line[:line.find(selected_prop)]
-                            lines[i] = f"{indent}{selected_prop}: {new_value}\n"
-                            yaml_data['TestCase'][selected_main][selected_sub][selected_prop] = new_value
-                            modified = True
-                            break
+                # 写回文件
+                with open(file_name, 'w', encoding='utf-8') as f:
+                    f.writelines(modified_lines)
                 
-                if modified:
-                    with open(file_name, 'w', encoding='utf-8') as f:
-                        f.writelines(lines)
-            
-            self.status_var.set("更新成功")
-            self.show_current_value()
-            
+                # 重新加载YAML数据
+                with open(file_name, 'r', encoding='utf-8') as f:
+                    self.yaml_files[file_name] = yaml.safe_load(f)
+                
+                self.status_var.set("Value updated successfully!")
         except Exception as e:
-            self.status_var.set(f"更新失败: {str(e)}")
+            self.status_var.set(f"Error updating value: {str(e)}")
 
 def main():
     root = TkinterDnD.Tk()
