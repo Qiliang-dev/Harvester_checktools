@@ -423,7 +423,21 @@ class YamlEditorApp:
         selected_main = self.main_category_var.get()
         selected_sub = self.sub_category_var.get()
         selected_prop = self.property_var.get()
-        new_value = self.current_value.get('1.0', 'end-1c').strip()  # 去除首尾空白
+        new_value = self.current_value.get('1.0', 'end-1c').strip()
+        
+        # 添加值类型处理逻辑
+        if new_value.lower() == 'null':
+            formatted_value = 'null'
+        elif new_value.isdigit():
+            formatted_value = new_value  # 保持数字的原始字符串形式
+        elif new_value.lower() == 'true' or new_value.lower() == 'false':
+            formatted_value = new_value.lower()
+        else:
+            # 如果是字符串，检查是否需要添加引号
+            if ' ' in new_value or ':' in new_value or '\n' in new_value:
+                formatted_value = f"'{new_value}'"  # 包含特殊字符时添加引号
+            else:
+                formatted_value = new_value
         
         try:
             for file_name, yaml_data in self.yaml_files.items():
@@ -437,10 +451,10 @@ class YamlEditorApp:
                 
                 while i < len(lines):
                     line = lines[i]
-                    current_line = line.rstrip()  # 移除行尾空白
+                    current_line = line.rstrip()
                     
                     # 检查是否进入目标子类别
-                    if not in_target_category and selected_sub in line and line.strip() == f"{selected_sub}:":
+                    if selected_sub and not in_target_category and selected_sub in line and line.strip() == f"{selected_sub}:":
                         in_target_category = True
                         category_indent = len(line) - len(line.lstrip())
                         modified_lines.append(current_line + '\n')
@@ -461,7 +475,7 @@ class YamlEditorApp:
                             indent_str = ' ' * indent
                             
                             # 添加更新的属性行
-                            modified_lines.append(f"{indent_str}{selected_prop}: {new_value}\n")
+                            modified_lines.append(f"{indent_str}{selected_prop}: {formatted_value}\n")
                             
                             # 跳过原有的多行值
                             i += 1
@@ -471,6 +485,16 @@ class YamlEditorApp:
                                     i += 1
                                 else:
                                     break
+                            continue
+                    
+                    # 处理简单值
+                    if not selected_sub and selected_main in line and ":" in line:
+                        prop_in_line = line.split(":")[0].strip()
+                        if prop_in_line == selected_main:
+                            indent = len(line) - len(line.lstrip())
+                            indent_str = ' ' * indent
+                            modified_lines.append(f"{indent_str}{selected_main}: {formatted_value}\n")
+                            i += 1
                             continue
                     
                     modified_lines.append(current_line + '\n')
