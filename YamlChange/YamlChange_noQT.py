@@ -4,6 +4,8 @@ import os
 import yaml
 from typing import Dict, List
 from tkinterdnd2 import *
+from ruamel.yaml import YAML
+import re
 
 class YamlEditorApp:
     def __init__(self, root):
@@ -89,18 +91,16 @@ class YamlEditorApp:
         folder = filedialog.askdirectory()
         if folder:
             self.yaml_files.clear()
-            # 使用 os.walk 递归遍历所有子文件夹
-            for root, dirs, files in os.walk(folder):
-                for file in files:
-                    if file.endswith('.yaml'):
-                        file_path = os.path.join(root, file)
-                        try:
-                            with open(file_path, 'r', encoding='utf-8') as f:
-                                yaml_data = yaml.safe_load(f)
-                                if yaml_data and 'TestCase' in yaml_data:
-                                    self.yaml_files[file_path] = yaml_data
-                        except Exception as e:
-                            self.status_var.set(f"Error loading {file}: {str(e)}")
+            for file in os.listdir(folder):
+                if file.endswith('.yaml'):
+                    file_path = os.path.join(folder, file)
+                    try:
+                        with open(file_path, 'r', encoding='utf-8') as f:
+                            yaml_data = yaml.load(f, Loader=yaml.FullLoader)
+                            if yaml_data and 'TestCase' in yaml_data:
+                                self.yaml_files[file_path] = yaml_data
+                    except Exception as e:
+                        print(f"加载失败 {file}: {str(e)}")
             
             if self.yaml_files:
                 self.update_main_categories()
@@ -138,11 +138,12 @@ class YamlEditorApp:
     def load_yaml_file(self, file_path):
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
-                yaml_data = yaml.safe_load(f)
+                # 直接使用 yaml.load 而不是 safe_load，因为这些都是我们自己的文件
+                yaml_data = yaml.load(f, Loader=yaml.Loader)
                 if yaml_data and 'TestCase' in yaml_data:
                     self.yaml_files[file_path] = yaml_data
         except Exception as e:
-            self.status_var.set(f"Error loading {os.path.basename(file_path)}: {str(e)}")
+            print(f"加载失败 {os.path.basename(file_path)}: {str(e)}")
 
     def update_main_categories(self):
         if self.yaml_files:
