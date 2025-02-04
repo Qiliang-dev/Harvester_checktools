@@ -139,6 +139,29 @@ class ResultWindow:
         self.window.clipboard_append(single_line)
         messagebox.showinfo("Success", "Results copied as single line!")
 
+# Function to check file completeness for each number
+def check_file_completeness(folder_path, folder_filenames):
+    # Dictionary to store files for each base number
+    files_by_number = {}
+    
+    # Group files by their base number
+    for filename in folder_filenames:
+        # Use existing extract_filename_base function to get the full date-number string
+        base_name = extract_filename_base(filename)
+        if base_name:
+            # Use the complete date-number string as key
+            if base_name not in files_by_number:
+                files_by_number[base_name] = set()
+            files_by_number[base_name].add(filename)
+    
+    # Check completeness for each number
+    incomplete_numbers = []
+    for number, files in files_by_number.items():
+        if len(files) < 4:  # If less than 4 files, it's incomplete
+            incomplete_numbers.append(number)
+    
+    return incomplete_numbers
+
 # Compare the filenames from Excel and Folder
 def compare_files():
     excel_file_path = excel_path_var.get()
@@ -166,19 +189,28 @@ def compare_files():
         excel_not_in_folder = excel_filenames[~excel_filenames.isin(folder_filenames_base)]
         folder_not_in_excel = [f for f in folder_filenames_base if f not in excel_filenames.values]
 
+        # Check file completeness
+        incomplete_files = check_file_completeness(folder_path, folder_filenames)
+
         result = ""
         # In Excel but not in Folder
         if not excel_not_in_folder.empty:
             result += "In Excel but not in Folder:\n"
-            result += "\n".join(excel_not_in_folder) + "\n"
+            result += "\n".join(excel_not_in_folder) + "\n\n"
+        
         # In Folder but not in Excel
         if folder_not_in_excel:
-            result += "\nIn Folder but not in Excel:\n"
-            result += "\n".join(folder_not_in_excel) + "\n"
+            result += "In Folder but not in Excel:\n"
+            result += "\n".join(folder_not_in_excel) + "\n\n"
+        
+        # Add incomplete files information
+        if incomplete_files:
+            result += "Numbers with incomplete files (less than 4 files):\n"
+            result += ", ".join(incomplete_files) + "\n"
 
-        # If no differences, show a unified message
+        # If no differences and all files complete, show a unified message
         if not result:
-            result = "All filenames in Excel match those in the Folder."
+            result = "All numbers have complete file sets (4 files each) and Excel matches Folder."
 
         # Show results in the new window
         ResultWindow(root, result)
