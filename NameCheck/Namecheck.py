@@ -2,7 +2,7 @@ import os
 import re
 import pandas as pd
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, ttk
 
 # Regular expression to match '20xx_xx_xx_xxxxxx' format
 filename_pattern = r'20\d{2}_\d{2}_\d{2}_\d{6}'
@@ -54,6 +54,91 @@ def select_folder():
     folder_path = filedialog.askdirectory(title="Select Folder")
     folder_path_var.set(folder_path)
 
+# Create a new class for the result window
+class ResultWindow:
+    def __init__(self, parent, result_text):
+        self.window = tk.Toplevel(parent)
+        self.window.title("Comparison Results")
+        self.window.geometry("600x400")
+
+        # Save the original text for undo
+        self.original_text = result_text
+
+        # Add input box and button frame
+        self.input_frame = ttk.Frame(self.window)
+        self.input_frame.pack(pady=5)
+        
+        # Add input box
+        self.suffix_var = tk.StringVar()
+        ttk.Label(self.input_frame, text="Add suffix:").pack(side=tk.LEFT, padx=5)
+        self.suffix_entry = ttk.Entry(self.input_frame, textvariable=self.suffix_var)
+        self.suffix_entry.pack(side=tk.LEFT, padx=5)
+        
+        # Add apply suffix button and undo button
+        ttk.Button(self.input_frame, text="Apply Suffix", command=self.apply_suffix).pack(side=tk.LEFT, padx=5)
+        ttk.Button(self.input_frame, text="Undo", command=self.undo_changes).pack(side=tk.LEFT, padx=5)
+
+        # Create text box
+        self.text_widget = tk.Text(self.window, wrap=tk.WORD, width=70, height=20)
+        self.text_widget.insert(tk.END, result_text)
+        self.text_widget.pack(padx=10, pady=10)
+
+        # Create button frame
+        button_frame = ttk.Frame(self.window)
+        button_frame.pack(pady=5)
+        
+        # Add copy button
+        ttk.Button(button_frame, text="Copy Results (with newlines)", command=self.copy_text).pack(side=tk.LEFT, padx=5)
+        ttk.Button(button_frame, text="Copy as Single Line", command=self.copy_as_single_line).pack(side=tk.LEFT, padx=5)
+
+    def apply_suffix(self):
+        suffix = self.suffix_var.get()
+        if suffix:
+            # Get all text content
+            content = self.text_widget.get("1.0", tk.END).strip()
+            lines = content.split('\n')
+            
+            # Process each line
+            new_content = []
+            for line in lines:
+                if line.strip() and not line.startswith("In Excel") and not line.startswith("In Folder"):
+                    line = line + suffix
+                new_content.append(line)
+            
+            # Update text box content
+            self.text_widget.delete("1.0", tk.END)
+            self.text_widget.insert("1.0", '\n'.join(new_content))
+
+    def undo_changes(self):
+        # Restore to original text
+        self.text_widget.delete("1.0", tk.END)
+        self.text_widget.insert("1.0", self.original_text)
+
+    def copy_text(self):
+        # Copy text with newlines
+        self.window.clipboard_clear()
+        self.window.clipboard_append(self.text_widget.get("1.0", tk.END))
+        messagebox.showinfo("Success", "Results copied to clipboard!")
+
+    def copy_as_single_line(self):
+        # Copy as single line (remove newlines and title lines)
+        content = self.text_widget.get("1.0", tk.END).strip()
+        lines = content.split('\n')
+        
+        # Filter out title lines and empty lines, only keep file names, and remove all whitespace characters
+        filenames = [line.strip() for line in lines 
+                    if line.strip() and not line.startswith("In Excel") and not line.startswith("In Folder")]
+        
+        # Connect all file names directly (without adding any separators)
+        single_line = ''.join(filenames)
+        
+        # Ensure to remove any possible newline characters
+        single_line = single_line.replace('\n', '').replace('\r', '')
+        
+        self.window.clipboard_clear()
+        self.window.clipboard_append(single_line)
+        messagebox.showinfo("Success", "Results copied as single line!")
+
 # Compare the filenames from Excel and Folder
 def compare_files():
     excel_file_path = excel_path_var.get()
@@ -95,8 +180,8 @@ def compare_files():
         if not result:
             result = "All filenames in Excel match those in the Folder."
 
-        # Show the result
-        messagebox.showinfo("Comparison Result", result)
+        # Show results in the new window
+        ResultWindow(root, result)
 
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {str(e)}")
