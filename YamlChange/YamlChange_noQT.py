@@ -17,7 +17,7 @@ class YamlEditorApp:
         
         self.setup_ui()
         
-        # 绑定文本变化事件
+        # bind the text change event
         self.current_value.bind('<KeyRelease>', self.on_text_change)
         
     def setup_ui(self):
@@ -101,13 +101,15 @@ class YamlEditorApp:
                             if yaml_data and 'TestCase' in yaml_data:
                                 self.yaml_files[file_path] = yaml_data
                     except Exception as e:
-                        print(f"加载失败 {file}: {str(e)}")
+                        print(f"Failed to load {file}: {str(e)}")
             
+
             if self.yaml_files:
                 self.update_main_categories()
-                self.status_var.set(f"已加载 {len(self.yaml_files)} 个YAML文件")
+                self.status_var.set(f"Loaded {len(self.yaml_files)} YAML files")
             else:
-                self.status_var.set("没有找到有效的YAML文件")
+                self.status_var.set("No valid YAML files found")
+
 
     def handle_drop(self, event):
         files = event.data
@@ -132,28 +134,34 @@ class YamlEditorApp:
         
         if self.yaml_files:
             self.update_main_categories()
-            self.status_var.set(f"已加载 {len(self.yaml_files)} 个YAML文件")
+            self.status_var.set(f"Loaded {len(self.yaml_files)} YAML files")
         else:
-            self.status_var.set("没有找到有效的YAML文件")
+            self.status_var.set("No valid YAML files found")
+
+
 
     def load_yaml_file(self, file_path):
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
-                # 直接使用 yaml.load 而不是 safe_load，因为这些都是我们自己的文件
+                # directly use yaml.load instead of safe_load, because these are our own files
                 yaml_data = yaml.load(f, Loader=yaml.Loader)
                 if yaml_data and 'TestCase' in yaml_data:
                     self.yaml_files[file_path] = yaml_data
+
         except Exception as e:
-            print(f"加载失败 {os.path.basename(file_path)}: {str(e)}")
+            print(f"Failed to load {os.path.basename(file_path)}: {str(e)}")
+
 
     def update_main_categories(self):
         if self.yaml_files:
             first_yaml = next(iter(self.yaml_files.values()))
             main_categories = list(first_yaml['TestCase'].keys())
             self.main_category_combo['values'] = main_categories
-            self.status_var.set(f"已加载 {len(self.yaml_files)} 个YAML文件")
+            self.status_var.set(f"Loaded {len(self.yaml_files)} YAML files")
         else:
-            self.status_var.set("没有找到有效的YAML文件")
+            self.status_var.set("No valid YAML files found")
+
+
 
     def on_main_category_selected(self, event):
         # Clear all sub-level selections
@@ -196,22 +204,23 @@ class YamlEditorApp:
         try:
             main_value = first_yaml['TestCase'][selected_main]
             if not isinstance(main_value, dict):
-                # 如果是简单值，直接从文件中读取保持原始格式
+                # if it's a simple value, read it directly from the file and keep the original format
                 file_name = next(iter(self.yaml_files.keys()))
                 with open(file_name, 'r', encoding='utf-8') as f:
                     lines = f.readlines()
-                
-                # 查找对应的行
+
+                # find the corresponding line
                 for line in lines:
                     if selected_main in line and ":" in line:
                         prop_in_line = line.split(":")[0].strip()
+
                         if prop_in_line == selected_main:
                             value = line.split(":", 1)[1].strip()
                             self.current_value.delete('1.0', tk.END)
                             self.current_value.insert('1.0', value)
                             break
-                
-                # 清除并禁用子类别和属性选择
+
+                # clear and disable the sub-category and property selection
                 self.sub_category_combo['values'] = []
                 self.property_combo['values'] = []
                 self.sub_category_var.set('')
@@ -220,14 +229,21 @@ class YamlEditorApp:
                 self.property_combo['state'] = 'disabled'
                 return
             else:
-                # 如果是字典，处理子类别
+                # if it's a dictionary, process the sub-category
                 self.sub_category_combo['state'] = 'readonly'
                 if selected_main == 'Vehicle':
                     vehicle_data = main_value
+
                     if self.type_var.get() == "seat":
-                        sub_categories = [key for key in vehicle_data.keys() if 'Seat' in key]
+                        # match all projects with seat attributes (including Dashboard and Trunk)
+                        sub_categories = []
+                        for key, value in vehicle_data.items():
+                            if isinstance(value, dict) and ('SeatPosition' in value or 'OccupancySeat' in value):
+
+                                sub_categories.append(key)
                     elif self.type_var.get() == "door":
-                        sub_categories = [key for key in vehicle_data.keys() if 'Door' in key or key == 'Tailgate']
+                        sub_categories = [key for key in vehicle_data.keys() 
+                                       if 'Door' in key or key in ['Tailgate','Hood']]
                     else:
                         sub_categories = list(vehicle_data.keys())
                 else:
@@ -252,41 +268,41 @@ class YamlEditorApp:
         try:
             sub_value = first_yaml['TestCase'][selected_main][selected_sub]
             
-            # 清除之前的选择
+            # clear the previous selection
             self.property_var.set('')
             self.item_sub_property_var.set('')
             self.property_combo['values'] = []
             self.item_sub_property_combo['state'] = 'disabled'
             
-            # 检查是否是简单值
+
+            # check if it's a simple value
             if not isinstance(sub_value, dict):
-                # 如果是简单值，直接显示并禁用属性选择
+                # if it's a simple value, display it directly and disable property selection
                 file_name = next(iter(self.yaml_files.keys()))
+
                 with open(file_name, 'r', encoding='utf-8') as f:
                     lines = f.readlines()
+
                 
-                # 查找对应的行
+                # find the corresponding line
                 for line in lines:
                     if selected_sub in line and ":" in line:
                         prop_in_line = line.split(":")[0].strip()
+
                         if prop_in_line == selected_sub:
                             value = line.split(":", 1)[1].strip()
                             self.current_value.delete('1.0', tk.END)
                             self.current_value.insert('1.0', value)
                             break
                 
-                # 禁用属性选择
+                # disable property selection
                 self.property_combo['state'] = 'disabled'
             else:
-                # 如果是字典，启用属性选择
+                # if it's a dictionary, enable property selection
                 self.property_combo['state'] = 'readonly'
                 properties = list(sub_value.keys())
                 self.property_combo['values'] = properties
-                
-                # 如果有OccupancyComment属性，自动选择它
-                if 'OccupancyComment' in properties:
-                    self.property_var.set('OccupancyComment')
-                    self.show_current_value()
+
         except KeyError as e:
             self.status_var.set(f"Error accessing data structure: {str(e)}")
 
@@ -399,80 +415,92 @@ class YamlEditorApp:
                         continue
                     if item_section_found and selected_item_prop in line:
                         indent = len(line) - len(line.lstrip())
-                        if indent > current_indent:  # 确保是Item下的属性
+                        if indent > current_indent:  # make sure it's an Item property
                             prop_in_line = line.split(":")[0].strip()
                             if prop_in_line == selected_item_prop:
                                 value_lines = []
-                                # 获取第一行的完整内容（包括冒号和空格）
+
+                                # get the full content of the first line (including the colon and space)
                                 first_line = line.split(":", 1)[1]
                                 value_lines.append(first_line.rstrip('\n'))
                                 
-                                # 检查后续行
+                                # check the following lines
                                 next_line_idx = i + 1
                                 while next_line_idx < len(lines):
+
                                     next_line = lines[next_line_idx]
                                     next_indent = len(next_line) - len(next_line.lstrip())
-                                    
-                                    # 如果缩进小于等于当前属性的缩进，说明到了下一个属性
+
+                                    # if the indent is less than or equal to the indent of the current property, it means the next property is found
                                     if next_indent <= indent:
                                         break
-                                    
-                                    # 添加原始行（保持空格和换行）
+
+                                    # add the original line (keep the space and newline)
                                     value_lines.append(next_line.rstrip('\n'))
                                     next_line_idx += 1
-                                
-                                # 合并所有行并显示
+
+                                # merge all lines and display
                                 self.current_value.delete('1.0', tk.END)
                                 self.current_value.insert('1.0', '\n'.join(value_lines))
                                 break
-                    if i > sub_start_line + 20:  # 防止过度搜索
+
+                    if i > sub_start_line + 20:  # prevent excessive search
                         break
         else:
-            # 在子类别中查找普通属性
+
+            # find the normal property in the sub-category
             current_indent = None
             for i in range(sub_start_line, len(lines)):
                 line = lines[i]
+
                 if not current_indent and line.strip():
                     current_indent = len(line) - len(line.lstrip())
                 if selected_prop in line:
                     indent = len(line) - len(line.lstrip())
-                    if indent == current_indent + 2:  # 确保是子类别直接下的属性
+                    if indent == current_indent + 2:  # make sure it's a property under the sub-category
                         prop_in_line = line.split(":")[0].strip()
                         if prop_in_line == selected_prop:
-                            # 获取完整的值（包括所有后续行）
+
+                            # get the full value (including all subsequent lines)
                             value_lines = []
-                            # 获取第一行的值（包括冒号后的所有内容，但不包括属性名和冒号）
+                            # get the value of the first line (including all content after the colon, but not including the property name and colon)
                             colon_pos = line.find(':')
                             if colon_pos != -1:
-                                first_line = line[colon_pos + 1:].rstrip('\n')  # 保留冒号后的所有内容
+
+                                first_line = line[colon_pos + 1:].rstrip('\n')  # keep all content after the colon
                                 value_lines.append(first_line)
                             
-                            # 检查后续行
+                            # check the following lines
                             next_line_idx = i + 1
-                            last_content_line = i  # 记录最后一个有内容的行
-                            empty_lines_count = 0  # 计数空行数量
+                            last_content_line = i  # record the last line with content
+                            empty_lines_count = 0  # count the number of empty lines
                             
+
                             while next_line_idx < len(lines):
                                 next_line = lines[next_line_idx].rstrip('\n')
-                                if next_line.strip():  # 如果是非空行
+                                if next_line.strip():  # if it's a non-empty line
                                     next_indent = len(next_line) - len(next_line.lstrip())
-                                    if next_indent <= indent:  # 如果缩进小于等于当前属性，说明到了下一个属性
+
+                                    if next_indent <= indent:  # if the indent is less than or equal to the indent of the current property, it means the next property is found
                                         break
                                     value_lines.append(next_line)
+
                                     last_content_line = next_line_idx
-                                    empty_lines_count = 0  # 重置空行计数
-                                else:  # 空行处理
-                                    if empty_lines_count < 10:  # 限制最多10个空行
+                                    empty_lines_count = 0  # reset the count of empty lines
+                                else:  # if it's an empty line
+                                    if empty_lines_count < 10:  # limit the number of empty lines to 10
                                         value_lines.append(next_line)
+
                                         empty_lines_count += 1
                                     else:
                                         break
                                 next_line_idx += 1
-                            
-                            # 合并所有行并显示（保持原始格式）
+
+                            # merge all lines and display (keep the original format)
                             full_content = '\n'.join(value_lines)
                             if not full_content.endswith('\n'):
-                                full_content += '\n'  # 确保最后有换行符
+                                full_content += '\n'  # make sure there is a newline at the end
+                            
                             
                             self.current_value.delete('1.0', tk.END)
                             self.current_value.insert('1.0', full_content)
@@ -483,13 +511,13 @@ class YamlEditorApp:
         selected_sub = self.sub_category_var.get()
         selected_prop = self.property_var.get()
         selected_item_prop = self.item_sub_property_var.get()
-        
-        # 获取当前值并处理
+
+        # get the current value and process it
         new_value = self.current_value.get('1.0', 'end-1c').strip()
         
-        # 处理多行内容：移除所有空行和多余空格
+        # process the multi-line content: remove all empty lines and extra spaces
         lines = [line.strip() for line in new_value.splitlines() if line.strip()]
-        # 合并所有非空行
+        # merge all non-empty lines
         new_value = ' '.join(lines)
         
         try:
@@ -498,8 +526,8 @@ class YamlEditorApp:
                     lines = f.readlines()
                 
                 modified = False
-                
-                # 处理简单值（如 TestNotes）
+
+                # process the simple value (like TestNotes)
                 if not selected_sub:
                     for i, line in enumerate(lines):
                         if line.strip().startswith(f"{selected_main}:"):
@@ -509,7 +537,7 @@ class YamlEditorApp:
                             modified = True
                             break
                 
-                # 处理子类别的值
+                # process the value of the sub-category
                 elif not selected_prop:
                     in_main = False
                     for i, line in enumerate(lines):
@@ -522,11 +550,12 @@ class YamlEditorApp:
                             yaml_data['TestCase'][selected_main][selected_sub] = new_value
                             modified = True
                             break
-                
-                # 处理属性值
+
+                # process the value of the property
                 elif selected_prop:
                     in_main = False
                     in_sub = False
+                    in_item = False
                     for i, line in enumerate(lines):
                         if not in_main and line.strip() == f"{selected_main}:":
                             in_main = True
@@ -534,23 +563,23 @@ class YamlEditorApp:
                         if in_main and not in_sub and line.strip() == f"{selected_sub}:":
                             in_sub = True
                             continue
-                        if in_sub and selected_prop in line and ":" in line:
+                        if in_sub and selected_prop in line and ":" in line and line.strip() == f"{selected_prop}:":
+                            in_item = True
+                            continue
+                        if in_item and selected_item_prop and selected_item_prop in line and ":" in line:
+                            prop_in_line = line.split(":")[0].strip()
+                            if prop_in_line == selected_item_prop:
+                                indent = line[:line.find(selected_item_prop)]
+                                lines[i] = f"{indent}{selected_item_prop}: {new_value}\n"
+                                yaml_data['TestCase'][selected_main][selected_sub][selected_prop][selected_item_prop] = new_value
+                                modified = True
+                                break
+                        elif in_sub and selected_prop in line and ":" in line and not selected_item_prop:
                             prop_in_line = line.split(":")[0].strip()
                             if prop_in_line == selected_prop:
                                 indent = line[:line.find(selected_prop)]
                                 lines[i] = f"{indent}{selected_prop}: {new_value}\n"
-                                
-                                # 删除后续的多余行（如果有的话）
-                                next_line_idx = i + 1
-                                while (next_line_idx < len(lines) and 
-                                       (not lines[next_line_idx].strip() or 
-                                        len(lines[next_line_idx]) - len(lines[next_line_idx].lstrip()) > len(indent))):
-                                    lines.pop(next_line_idx)
-                                
-                                if selected_item_prop:
-                                    yaml_data['TestCase'][selected_main][selected_sub][selected_prop][selected_item_prop] = new_value
-                                else:
-                                    yaml_data['TestCase'][selected_main][selected_sub][selected_prop] = new_value
+                                yaml_data['TestCase'][selected_main][selected_sub][selected_prop] = new_value
                                 modified = True
                                 break
                 
@@ -558,14 +587,16 @@ class YamlEditorApp:
                     with open(file_name, 'w', encoding='utf-8') as f:
                         f.writelines(lines)
             
-            self.status_var.set("更新成功")
+            self.status_var.set("Update successfully")
             
         except Exception as e:
-            self.status_var.set(f"更新失败: {str(e)}")
+            self.status_var.set(f"Update failed: {str(e)}")
+
 
     def on_text_change(self, event=None):
-        # 不再限制编辑行为，允许自由编辑多行内容
+        # no longer limit the editing behavior, allow free editing of multi-line content
         pass
+
 
 def main():
     root = TkinterDnD.Tk()

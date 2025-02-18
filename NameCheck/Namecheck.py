@@ -24,15 +24,25 @@ def split_filenames(cell_value):
 
 # Function to scan entire Excel for filenames that match the pattern
 def scan_excel_for_filenames(df):
-    all_filenames = [] # Create a empty file to save the data from Excel
+    all_filenames = []
     for col in df.columns:
-        # dropna: Ignore all the empty value
-        # apply: apple the function split_filenames to all the no_empty box
-        # explode: extend the list element to the row (relese the name split by symbol)
         column_data = df[col].dropna().apply(split_filenames).explode()
         column_filenames = column_data.apply(lambda x: extract_filename_base(str(x))).dropna()
         all_filenames.extend(column_filenames)
-    return pd.Series(all_filenames).drop_duplicates()
+    
+    # 转换为Series并找出重复项
+    filename_series = pd.Series(all_filenames)
+    duplicates = filename_series[filename_series.duplicated()].unique()
+    unique_filenames = filename_series.drop_duplicates()
+    
+    # 计算不同的测试编号数量
+    test_numbers = set()
+    for filename in all_filenames:
+        if filename:
+            test_number = filename[-6:]  # 获取文件名最后6位数字
+            test_numbers.add(test_number)
+    
+    return unique_filenames, duplicates.tolist(), len(test_numbers)
 
 # Select Excel path
 def select_excel_file():
@@ -176,8 +186,8 @@ def compare_files():
         # Read the selected sheet from the Excel file
         df = pd.read_excel(excel_file_path, sheet_name=selected_sheet)
 
-        # Scan the entire Excel for filenames matching the pattern 
-        excel_filenames = scan_excel_for_filenames(df)
+        # Scan the entire Excel for filenames matching the pattern and get duplicates
+        excel_filenames, duplicates, test_count = scan_excel_for_filenames(df)
 
         # Get the file list from Folder
         folder_filenames = os.listdir(folder_path)
@@ -193,24 +203,40 @@ def compare_files():
         incomplete_files = check_file_completeness(folder_path, folder_filenames)
 
         result = ""
+        has_issues = False
+
         # In Excel but not in Folder
         if not excel_not_in_folder.empty:
+            has_issues = True
             result += "In Excel but not in Folder:\n"
             result += "\n".join(excel_not_in_folder) + "\n\n"
         
         # In Folder but not in Excel
         if folder_not_in_excel:
+            has_issues = True
             result += "In Folder but not in Excel:\n"
             result += "\n".join(folder_not_in_excel) + "\n\n"
         
         # Add incomplete files information
         if incomplete_files:
+            has_issues = True
             result += "Numbers with incomplete files (less than 4 files):\n"
-            result += ", ".join(incomplete_files) + "\n"
+            result += ", ".join(incomplete_files) + "\n\n"
 
-        # If no differences and all files complete, show a unified message
-        if not result:
-            result = "All numbers have complete file sets (4 files each) and Excel matches Folder."
+        # Add duplicate files information
+        if duplicates:
+            has_issues = True
+            result += "Duplicate filenames found in Excel:\n"
+            result += "\n".join(duplicates) + "\n\n"
+        else:
+            result += "No duplicate filenames found in Excel.\n\n"
+
+        # If no issues found, show the complete success message
+        if not has_issues:
+            result = "All numbers have complete file sets (4 files each) and Excel matches Folder.\nNo duplicate filenames found in Excel."
+
+        # Add test count information at the beginning of the result
+        result = f"Now we have {test_count} different test numbers in the current Excel file ({selected_sheet}).\n\n" + result
 
         # Show results in the new window
         ResultWindow(root, result)
