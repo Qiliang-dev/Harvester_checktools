@@ -2,11 +2,11 @@
 
 
 a = Analysis(
-    ['YamlChange.py'],
+    ['YamlChange_noQT.py'],
     pathex=[],
     binaries=[],
     datas=[],
-    hiddenimports=[],
+    hiddenimports=['tkinter', 'tkinterdnd2', 'yaml'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='YamlChange',
+    name='YamlEditor',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

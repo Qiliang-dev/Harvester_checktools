@@ -88,9 +88,35 @@ class YamlEditorApp:
         self.status_var = tk.StringVar()
         ttk.Label(main_frame, textvariable=self.status_var).grid(row=9, column=0, columnspan=2, pady=5)
 
+    def reset_all_fields(self):
+        # Reset all selection fields
+        self.main_category_var.set('')
+        self.sub_category_var.set('')
+        self.property_var.set('')
+        self.item_sub_property_var.set('')
+        self.type_var.set('all')
+        
+        # Clear all combobox values
+        self.main_category_combo['values'] = []
+        self.sub_category_combo['values'] = []
+        self.property_combo['values'] = []
+        self.item_sub_property_combo['values'] = []
+        
+        # Disable item property combobox
+        self.item_sub_property_combo['state'] = 'disabled'
+        
+        # Clear current value
+        self.current_value.delete('1.0', tk.END)
+        
+        # Reset status bar
+        self.status_var.set('')
+        
     def select_folder(self):
         folder = filedialog.askdirectory()
         if folder:
+            # Reset all fields before loading new data
+            self.reset_all_fields()
+            
             self.yaml_files.clear()
             for file in os.listdir(folder):
                 if file.endswith('.yaml'):
@@ -112,14 +138,38 @@ class YamlEditorApp:
 
 
     def handle_drop(self, event):
+        # Reset all fields before loading new files
+        self.reset_all_fields()
+        
         files = event.data
-        file_paths = files.split(' ')
+        # Split the dropped files string and handle both Windows and Unix paths
+        file_paths = [path.strip('{}') for path in files.split(' ')]
+        
         self.yaml_files.clear()
+        valid_files = 0
+        
         for file_path in file_paths:
-            file_path = file_path.strip('{}')
-            if file_path.lower().endswith('.yaml'):
-                self.load_yaml_file(file_path)
-        self.update_main_categories()
+            if file_path.lower().endswith(('.yaml', '.yml')):
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        yaml_data = yaml.load(f, Loader=yaml.FullLoader)
+                        if yaml_data and 'TestCase' in yaml_data:
+                            self.yaml_files[file_path] = yaml_data
+                            valid_files += 1
+                except Exception as e:
+                    print(f"Failed to load {os.path.basename(file_path)}: {str(e)}")
+        
+        if valid_files > 0:
+            self.update_main_categories()
+            self.status_var.set(f"Loaded {valid_files} YAML files")
+            # Enable the drop area text to show loaded files
+            self.drop_area.configure(state='normal')
+            self.drop_area.delete('1.0', tk.END)
+            self.drop_area.insert('1.0', f"Loaded {valid_files} files:\n" + 
+                                "\n".join(os.path.basename(f) for f in self.yaml_files.keys()))
+            self.drop_area.configure(state='disabled')
+        else:
+            self.status_var.set("No valid YAML files found")
 
     def load_yaml_files_from_folder(self, folder_path):
         self.yaml_files.clear()
@@ -164,6 +214,9 @@ class YamlEditorApp:
 
 
     def on_main_category_selected(self, event):
+        # Reset status bar
+        self.status_var.set('')
+        
         # Clear all sub-level selections
         self.sub_category_var.set('')
         self.property_var.set('')
@@ -258,6 +311,9 @@ class YamlEditorApp:
             return
 
     def on_sub_category_selected(self, event):
+        # Reset status bar
+        self.status_var.set('')
+        
         selected_main = self.main_category_var.get()
         selected_sub = self.sub_category_var.get()
         
@@ -356,6 +412,9 @@ class YamlEditorApp:
                     self.item_sub_property_combo.set(current_item_prop)
 
     def on_property_selected(self, event):
+        # Reset status bar
+        self.status_var.set('')
+        
         selected_prop = self.property_var.get()
         if selected_prop == "Item":
             # If Item is selected, enable the sub-property selector and set the available values
@@ -372,6 +431,9 @@ class YamlEditorApp:
             self.show_current_value()
 
     def on_item_sub_property_selected(self, event):
+        # Reset status bar
+        self.status_var.set('')
+        
         self.show_current_value()
 
     def show_current_value(self):

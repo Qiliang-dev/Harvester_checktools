@@ -1,0 +1,322 @@
+Version: '1.3'
+TestCase:
+  Name: 2025_02_20_103050_DA00097_C
+  Description: CPDSML-992
+  Time: 20/02/2025 10:30:50
+  TestNotes: ''
+  Environment:
+    TestLocation: Garage
+    TestWeather: null
+    CurrentTemperature: 20
+    ExternalNoise: null
+  Operator:
+    Name: 'DEV: more reworked 4A systems newborn dummy'
+    Company: BMW
+  Duration: 15
+  Filename: 2025_02_20_103050_DA00097_C.blf
+  Vehicle:
+    CarModel:
+      Model: BMW
+      Variant: iX3 50 x
+      VIN: WBA31HR000DA00097
+      RHD: false
+    OptionalEquipment:
+      S230A:
+        Name: Eu Spezifische Zusatzumf
+        Description: null
+      S248A:
+        Name: Lenkradheizung
+        Description: null
+      S2VBA:
+        Name: Reifendruckanzeige
+        Description: null
+      S2VCA:
+        Name: Reifenreparatur-Set
+        Description: null
+      S2XHA:
+        Name: Sport-Lenkrad
+        Description: null
+      S302A:
+        Name: Alarmanlage
+        Description: null
+      S320A:
+        Name: Modellschriftzug Entfall
+        Description: null
+      S3DPA:
+        Name: Bmw Iconic Glow Ext.Pak.
+        Description: null
+      S3DZA:
+        Name: Entfall Zusatz-Schriftzu
+        Description: null
+      S3M1A:
+        Name: M Sportbremse, Du.Bl.Met
+        Description: null
+      S3NVA:
+        Name: 22" I. Aero.1053i Bic Mb
+        Description: null
+      S402A:
+        Name: Panorama Glasdach
+        Description: null
+      S413A:
+        Name: Gepaeckraumtrennetz
+        Description: null
+      S420A:
+        Name: Darkened Glass
+        Description: null
+      S428A:
+        Name: Warndreieck
+        Description: null
+      S479A:
+        Name: Kindersitzbef. Beifahr.
+        Description: null
+      S494A:
+        Name: Sitzheizung Fuer Fa/Bf
+        Description: null
+      S4FMA:
+        Name: Multifunktionssitze F.Fa
+        Description: null
+      S4T2A:
+        Name: Ladekabel Prof. (Mode 3)
+        Description: null
+      S4T7A:
+        Name: Massagefunktion Fuer Fah
+        Description: null
+      S4U6A:
+        Name: Ac-Laden Professional
+        Description: null
+      S4URA:
+        Name: Ambientes Licht
+        Description: null
+      S534A:
+        Name: Klimaautomatik
+        Description: null
+      S548A:
+        Name: Kilometertacho
+        Description: null
+      S5AUA:
+        Name: Driving Assistant Profes
+        Description: null
+      S5AVA:
+        Name: Active Guard
+        Description: null
+      S5DNA:
+        Name: Parking Assistant Plus
+        Description: null
+      S610A:
+        Name: Head-Up Display
+        Description: null
+      S61BA:
+        Name: Bmw Panoramic Vision
+        Description: null
+      S654A:
+        Name: Dab Tuner
+        Description: null
+      S674A:
+        Name: Hifi-System Harman/Kardo
+        Description: null
+      S6AEA:
+        Name: Teleservices
+        Description: null
+      S6AFA:
+        Name: Gesetzlicher Notruf
+        Description: null
+      S6NXA:
+        Name: Ablage Fuer Wireless Cha
+        Description: null
+      S6UVA:
+        Name: Augmented View
+        Description: null
+      S851A:
+        Name: Sprachversion Deutsch
+        Description: null
+      S879A:
+        Name: Deutsch / Bordliteratur
+        Description: null
+      S8EBA:
+        Name: Steuerung Einzelbetriebs
+        Description: null
+      S8R3A:
+        Name: Coc Zusatzumfaenge
+        Description: null
+      S8TFA:
+        Name: Aktiver Fussgaengerschut
+        Description: null
+      S909A:
+        Name: S909a Analysestecker
+        Description: null
+      S90AA:
+        Name: Mob. Prot. Data Record.
+        Description: null
+      S991A:
+        Name: Steuerung Vorserie
+        Description: null
+      S9ACA:
+        Name: Tarnung Nsg Fahrzeuge
+        Description: null
+      S9ADA:
+        Name: Abschliessbare Tarnplane
+        Description: null
+      S9AEA:
+        Name: Entwicklungskonfiguratio
+        Description: null
+    Engine:
+      State: Stopped
+      Type: Electric
+    DriverDoor:
+      Door: Closed
+      Window: Closed
+      Item:
+        Name: null
+        ItemMovement: null
+        ItemComment: ''
+        ItemDistance: 0
+    PassengerDoor:
+      Door: Closed
+      Window: Closed
+      Item:
+        Name: null
+        ItemMovement: null
+        ItemComment: ''
+        ItemDistance: 0
+    DriverRearDoor:
+      Door: Closed
+      Window: Closed
+      Item:
+        Name: null
+        ItemMovement: null
+        ItemComment: ''
+        ItemDistance: 0
+    PassengerRearDoor:
+      Door: Closed
+      Window: Closed
+      Item:
+        Name: null
+        ItemMovement: null
+        ItemComment: ''
+        ItemDistance: 0
+    Tailgate:
+      Door: Closed
+      Window: Closed
+      Item:
+        Name: null
+        ItemMovement: null
+        ItemComment: ''
+        ItemDistance: 0
+    Hood:
+      Door: Closed
+      Window: Closed
+      Item:
+        Name: null
+        ItemMovement: null
+        ItemComment: ''
+        ItemDistance: 0
+    SeatLeftRow1:
+      SeatPosition:
+        BackrestTilt: Straight
+        Position: Mid
+      OccupancySeat: null
+      OccupancyFootwell: null
+      ChildSeatModel: ''
+      OccupancyMovement: null
+      SeatBeltStatus: Open
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: ''
+    SeatLeftRow2:
+      SeatPosition:
+        BackrestTilt: Straight
+        Position: Mid
+      OccupancySeat: null
+      OccupancyFootwell: null
+      ChildSeatModel: ''
+      OccupancyMovement: null
+      SeatBeltStatus: Open
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: ''
+    SeatRightRow1:
+      SeatPosition:
+        BackrestTilt: LowTilt
+        Position: Mid
+      OccupancySeat: Dummy_ID3003
+      OccupancyFootwell: null
+      ChildSeatModel: Maxi Cosi Cabriofix
+      OccupancyMovement: normal
+      SeatBeltStatus: Open
+      ChildSeatOrientation: Backward
+      OccupancyComment: Childseat handle folded back, childseat only placed on the
+        seat, not fixed
+    SeatRightRow2:
+      SeatPosition:
+        BackrestTilt: Straight
+        Position: Mid
+      OccupancySeat: null
+      OccupancyFootwell: null
+      ChildSeatModel: ''
+      OccupancyMovement: null
+      SeatBeltStatus: Open
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: ''
+    SeatMidRow2:
+      SeatPosition:
+        BackrestTilt: Straight
+        Position: Mid
+      OccupancySeat: null
+      OccupancyFootwell: null
+      ChildSeatModel: ''
+      OccupancyMovement: null
+      SeatBeltStatus: Open
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: ''
+    Dashboard:
+      SeatPosition:
+        BackrestTilt: null
+        Position: null
+      OccupancySeat: null
+      OccupancyFootwell: null
+      ChildSeatModel: ''
+      OccupancyMovement: null
+      SeatBeltStatus: null
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: ''
+    Trunk:
+      SeatPosition:
+        BackrestTilt: null
+        Position: null
+      OccupancySeat: null
+      OccupancyFootwell: null
+      ChildSeatModel: ''
+      OccupancyMovement: null
+      SeatBeltStatus: null
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: ''
+  Sensors:
+    SamplingRate: 96
+    Channel: 9
+    SensitivityBoost: 0
+    NoiseSuppression: 1
+    VM:
+      Position: 0
+      Rotation: 0
+      HardwareVersion: 007.010.000
+      BTLDSWF: 016.010.012
+      BLESWF: 017.010.010
+      UWBSWF: 017.010.010
+      PartNumber: 4A2B750-00
+      ProductionDate: '24B000  '
+      SerialNumber: '0'
+    HM:
+      Position: 0
+      Rotation: 0
+      HardwareVersion: 007.010.000
+      BTLDSWF: 016.010.012
+      BLESWF: 017.010.010
+      UWBSWF: 017.010.010
+      PartNumber: 4A2B750-00
+      ProductionDate: '24B000  '
+      SerialNumber: '0'
+Catalog:
+  Dummy:
+  - Name: Dummy_ID3003
+    Model: 4active Systems newborn
+    BreathingAmplitude: 0
+    BreathingFrequency: 30
+    BreathingMode: sleep
