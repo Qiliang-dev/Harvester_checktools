@@ -598,86 +598,110 @@ class YamlEditorApp:
         selected_prop = self.property_var.get()
         selected_item_prop = self.item_sub_property_var.get()
 
-        # get the current value and process it
-        new_value = self.current_value.get('1.0', 'end-1c').strip()
-        
-        # process the multi-line content: remove all empty lines and extra spaces
-        lines = [line.strip() for line in new_value.splitlines() if line.strip()]
-        # merge all non-empty lines
-        new_value = ' '.join(lines)
-        
+        # 获取当前文本框内容，并合并为一行
+        new_value_text = self.current_value.get('1.0', 'end-1c')
+        new_value_single_line = ' '.join([line.strip() for line in new_value_text.splitlines() if line.strip()])
+
         try:
             for file_name, yaml_data in self.yaml_files.items():
                 with open(file_name, 'r', encoding='utf-8') as f:
                     lines = f.readlines()
-                
+
                 modified = False
+                prop_line_index = -1
+                prop_indent = -1
+                value_end_index = -1
+                target_prop_name = None
 
-                # process the simple value (like TestNotes)
+                # 1. 确定目标属性名
                 if not selected_sub:
-                    for i, line in enumerate(lines):
-                        if line.strip().startswith(f"{selected_main}:"):
-                            indent = line[:line.find(selected_main)]
-                            lines[i] = f"{indent}{selected_main}: {new_value}\n"
-                            yaml_data['TestCase'][selected_main] = new_value
-                            modified = True
-                            break
-                
-                # process the value of the sub-category
-                elif not selected_prop:
-                    in_main = False
-                    for i, line in enumerate(lines):
-                        if not in_main and line.strip() == f"{selected_main}:":
-                            in_main = True
-                            continue
-                        if in_main and selected_sub in line and ":" in line:
-                            indent = line[:line.find(selected_sub)]
-                            lines[i] = f"{indent}{selected_sub}: {new_value}\n"
-                            yaml_data['TestCase'][selected_main][selected_sub] = new_value
-                            modified = True
-                            break
-
-                # process the value of the property
+                    target_prop_name = selected_main
+                elif selected_sub and not selected_prop:
+                    target_prop_name = selected_sub
                 elif selected_prop:
-                    in_main = False
-                    in_sub = False
-                    in_item = False
-                    for i, line in enumerate(lines):
-                        if not in_main and line.strip() == f"{selected_main}:":
-                            in_main = True
-                            continue
-                        if in_main and not in_sub and line.strip() == f"{selected_sub}:":
-                            in_sub = True
-                            continue
-                        if in_sub and selected_prop in line and ":" in line and line.strip() == f"{selected_prop}:":
-                            in_item = True
-                            continue
-                        if in_item and selected_item_prop and selected_item_prop in line and ":" in line:
-                            prop_in_line = line.split(":")[0].strip()
-                            if prop_in_line == selected_item_prop:
-                                indent = line[:line.find(selected_item_prop)]
-                                lines[i] = f"{indent}{selected_item_prop}: {new_value}\n"
-                                yaml_data['TestCase'][selected_main][selected_sub][selected_prop][selected_item_prop] = new_value
-                                modified = True
-                                break
-                        elif in_sub and selected_prop in line and ":" in line and not selected_item_prop:
-                            prop_in_line = line.split(":")[0].strip()
-                            if prop_in_line == selected_prop:
-                                indent = line[:line.find(selected_prop)]
-                                lines[i] = f"{indent}{selected_prop}: {new_value}\n"
-                                yaml_data['TestCase'][selected_main][selected_sub][selected_prop] = new_value
-                                modified = True
-                                break
-                
-                if modified:
-                    with open(file_name, 'w', encoding='utf-8') as f:
-                        f.writelines(lines)
-            
+                    target_prop_name = selected_item_prop if selected_prop == "Item" else selected_prop
+
+                # 2. 找到目标属性行和缩进
+                in_main = in_sub = in_item = False
+                for i, line in enumerate(lines):
+                    stripped = line.strip()
+                    indent = len(line) - len(stripped)
+                    if selected_main and stripped == f"{selected_main}:":
+                        in_main = True
+                        in_sub = False
+                        in_item = False
+                        continue
+                    if in_main and selected_sub and stripped == f"{selected_sub}:":
+                        in_sub = True
+                        in_item = False
+                        continue
+                    if in_sub and selected_prop == "Item" and stripped == "Item:":
+                        in_item = True
+                        continue
+
+                    # 找到目标属性行
+                    if (
+                        (selected_prop == "Item" and in_item and stripped.startswith(f"{target_prop_name}:")) or
+                        (selected_prop != "Item" and in_sub and stripped.startswith(f"{target_prop_name}:"))
+                    ):
+                        prop_line_index = i
+                        prop_indent = indent
+                        break
+                    # 兼容主分类和子分类直接是简单值的情况
+                    if not selected_prop and not selected_item_prop and (
+                        (in_main and not in_sub and stripped.startswith(f"{target_prop_name}:")) or
+                        (in_sub and stripped.startswith(f"{target_prop_name}:"))
+                    ):
+                        prop_line_index = i
+                        prop_indent = indent
+                        break
+
+                if prop_line_index == -1:
+                    continue  # 没找到属性，跳过
+
+                # 3. 找到该属性下所有属于它的多行内容
+                value_start = prop_line_index
+                value_end = prop_line_index
+                for j in range(prop_line_index + 1, len(lines)):
+                    next_line = lines[j]
+                    next_stripped = next_line.strip()
+                    next_indent = len(next_line) - len(next_stripped)
+                    if next_stripped == "":
+                        value_end = j  # 空行也算
+                        continue
+                    if next_indent <= prop_indent:
+                        break
+                    value_end = j
+
+                # 4. 构建新内容
+                colon_pos = lines[prop_line_index].find(':')
+                line_prefix = lines[prop_line_index][:colon_pos + 1] + ' '
+                new_property_line = f"{line_prefix}{new_value_single_line}\n"
+                new_lines = lines[:prop_line_index] + [new_property_line] + lines[value_end + 1:]
+
+                # 5. 写回文件
+                with open(file_name, 'w', encoding='utf-8') as f:
+                    f.writelines(new_lines)
+                modified = True
+
+                # 6. 更新内存数据
+                try:
+                    if selected_main:
+                        if not selected_sub:
+                            yaml_data['TestCase'][selected_main] = new_value_single_line
+                        elif selected_sub:
+                            if not selected_prop:
+                                yaml_data['TestCase'][selected_main][selected_sub] = new_value_single_line
+                            elif selected_prop == "Item" and selected_item_prop:
+                                yaml_data['TestCase'][selected_main][selected_sub][selected_prop][selected_item_prop] = new_value_single_line
+                            elif selected_prop != "Item":
+                                yaml_data['TestCase'][selected_main][selected_sub][selected_prop] = new_value_single_line
+                except Exception as e:
+                    print(f"Warning: Failed to update in-memory YAML data for {file_name}: {e}")
+
             self.status_var.set("Update successfully")
-            
         except Exception as e:
             self.status_var.set(f"Update failed: {str(e)}")
-
 
     def on_text_change(self, event=None):
         # no longer limit the editing behavior, allow free editing of multi-line content
