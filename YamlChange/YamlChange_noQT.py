@@ -4,6 +4,7 @@ import os
 import yaml
 from typing import Dict, List
 from tkinterdnd2 import *
+from tkinter import font as tkFont
 
 class YamlEditorApp:
     def __init__(self, root):
@@ -31,6 +32,18 @@ class YamlEditorApp:
         
         # Select folder button
         ttk.Button(folder_frame, text="Choose Folder", command=self.select_folder).grid(row=0, column=0, padx=5)
+        
+        # Add a text box to display the selected folder path
+        self.folder_path_display = tk.Text(folder_frame, height=2, width=50) # 可以调整宽度
+        self.folder_path_display.grid(row=1, column=0, columnspan=2, padx=5, pady=2, sticky=(tk.W, tk.E))
+
+        # Define a smaller font and apply it to the text box
+        self.small_font = tkFont.Font(family="TkDefaultFont", size=8)
+        self.folder_path_display.config(font=self.small_font)
+
+        self.folder_path_display.config(state='normal')
+        self.folder_path_display.insert('1.0', "Selected folder path will appear here")
+        self.folder_path_display.configure(state='disabled') # Make it read-only
         
         # Drop area
         self.drop_area = tk.Text(folder_frame, height=2, width=40)
@@ -108,6 +121,12 @@ class YamlEditorApp:
         # Clear current value
         self.current_value.delete('1.0', tk.END)
         
+        # Clear the folder path display
+        self.folder_path_display.configure(state='normal')
+        self.folder_path_display.delete('1.0', tk.END)
+        self.folder_path_display.insert('1.0', "Selected folder path will appear here")
+        self.folder_path_display.configure(state='disabled')
+
         # Reset status bar
         self.status_var.set('')
         
@@ -133,6 +152,11 @@ class YamlEditorApp:
             if self.yaml_files:
                 self.update_main_categories()
                 self.status_var.set(f"Loaded {len(self.yaml_files)} YAML files")
+                # Update the folder path display
+                self.folder_path_display.configure(state='normal') # Enable editing temporarily
+                self.folder_path_display.delete('1.0', tk.END)
+                self.folder_path_display.insert('1.0', folder) # Insert the selected folder path
+                self.folder_path_display.configure(state='disabled') # Set back to read-only
             else:
                 self.status_var.set("No valid YAML files found")
 
