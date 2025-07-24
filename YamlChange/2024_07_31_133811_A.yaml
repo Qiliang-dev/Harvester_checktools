@@ -1,0 +1,424 @@
+Catalog:
+  Persons:
+  - Age: 20
+    Gender: Female
+    Height: 100
+    Name: Person_ID1001
+    SeatingHeight: 0
+    ShoulderWidth: 80
+    Weight: 120
+TestCase:
+  Description: BMW Integration Testing HW 4.0
+  Duration: 60
+  Environment:
+    CurrentTemperature: 21
+    ExternalNoise: null
+    TestLocation: Garage
+    TestWeather: Interior
+  Filename: 2024_07_31_133811_A.blf
+  Name: 2024_07_31_133811_A
+  Operator:
+    Company: BMW
+    Name: BMW's employee
+  Sensors:
+    Channel: 8
+    HM:
+      HardwareVersion: 4B05478
+      PDXVersion: '012_010_114'
+      Position: 0
+      Rotation: 0
+    SamplingRate: 24
+    VM:
+      HardwareVersion: 4B05477
+      PDXVersion: '012_010_114'
+      Position: 0
+      Rotation: 0
+  TestNotes: 'Test'
+  Time: 31/07/2024 13:38:11
+  Vehicle:
+    CarModel:
+      Model: BMW
+      RHD: false
+      VIN: 5UXTS1C06L9C44150
+      Variant: G01
+    DriverDoor:
+      Door: Closed
+      Item:
+        ItemComment: 'areyouOK'
+        ItemDistance: 0
+        Name: null
+      Window: Closed
+    DriverRearDoor:
+      Door: Closed
+      Item:
+        ItemComment: '''nihaoma'''
+        ItemDistance: 0
+        Name: null
+      Window: Closed
+    Engine:
+      State: Stopped
+      Type: Hybrid
+    OptionalEquipment:
+      L801A:
+        Description: null
+        Name: Deutschland-Ausfuehrung
+      P337A:
+        Description: null
+        Name: M Sportpaket
+      S1CBA:
+        Description: null
+        Name: Co2 Umfang
+      S1DFA:
+        Description: null
+        Name: Abgastechnik Eu6d/E
+      S1RYA:
+        Description: null
+        Name: 20"M Lmr.Do.Spe.787m/ Mb
+      S212A:
+        Description: null
+        Name: Ausst Bremsanl Laender
+      S230A:
+        Description: null
+        Name: Eu Spezifische Zusatzumf
+      S248A:
+        Description: null
+        Name: Lenkradheizung
+      S255A:
+        Description: null
+        Name: Sport-Lederlenkrad
+      S258A:
+        Description: null
+        Name: Bereifung Mit Notlaufeig
+      S25UA:
+        Description: null
+        Name: 18"Lm Raed.V-Spei.618 Nl
+      S2PAA:
+        Description: null
+        Name: Radschraubensicherung
+      S2TBA:
+        Description: null
+        Name: Sport-Automatik Getriebe
+      S2VBA:
+        Description: null
+        Name: Reifendruckanzeige
+      S2VGA:
+        Description: null
+        Name: Performance Control
+      S2VLA:
+        Description: null
+        Name: Variable Sportlenkung
+      S302A:
+        Description: null
+        Name: Alarmanlage
+      S322A:
+        Description: null
+        Name: Komfortzugang
+      S3AGA:
+        Description: null
+        Name: Rueckfahrkamera
+      S3KAA:
+        Description: null
+        Name: Akustikkomfort-Verglasun
+      S3M2A:
+        Description: null
+        Name: M Sportbremse, Rot.Hochg
+      S3MCA:
+        Description: null
+        Name: M Dachreling Hgl Sha. L.
+      S402A:
+        Description: null
+        Name: Panorama Glasdach
+      S413A:
+        Description: null
+        Name: Gepaeckraumtrennetz
+      S417A:
+        Description: null
+        Name: Sonnensch.Rollo Hi.Tuers
+      S420A:
+        Description: null
+        Name: Darkened Glass
+      S423A:
+        Description: null
+        Name: Fussmatten In Velours
+      S428A:
+        Description: null
+        Name: Warndreieck
+      S430A:
+        Description: null
+        Name: Innen- Und Aussenspiegel
+      S431A:
+        Description: null
+        Name: Innenspiegel Aut Abblend
+      S459A:
+        Description: null
+        Name: Sitzverstellung, Elektr.
+      S461A:
+        Description: null
+        Name: Sitzlehnenverst., Fond
+      S481A:
+        Description: null
+        Name: Sportsitze Fuer Fa/Bf
+      S488A:
+        Description: null
+        Name: Lordosenstuetze Fa/Bf
+      S490A:
+        Description: null
+        Name: Lehnenbreitenvers. Fa/Bf
+      S493A:
+        Description: null
+        Name: Ablagenpaket
+      S494A:
+        Description: null
+        Name: Sitzheizung Fuer Fa/Bf
+      S4AWA:
+        Description: null
+        Name: Instrumententafel In Sen
+      S4K1A:
+        Description: null
+        Name: Edel.Eiche.Du.M.Ak.Pe.Ch
+      S4KNA:
+        Description: null
+        Name: Int.L.Alu.Rhombicle D.A.
+      S4NEA:
+        Description: null
+        Name: Blow-By-Heizer
+      S4U0A:
+        Description: null
+        Name: Galvanikapplikation F.Be
+      S4U9A:
+        Description: null
+        Name: Akustischer Fussgaengers
+      S4URA:
+        Description: null
+        Name: Ambientes Licht
+      S534A:
+        Description: null
+        Name: Klimaautomatik
+      S548A:
+        Description: null
+        Name: Kilometertacho
+      S5A4A:
+        Description: null
+        Name: Led-Scheinwerfer M.Erwei
+      S5ACA:
+        Description: null
+        Name: Fernlichtassistent
+      S5ALA:
+        Description: null
+        Name: Active Protection
+      S5AUA:
+        Description: null
+        Name: Driving Assistant Profes
+      S5AVA:
+        Description: null
+        Name: Active Guard
+      S5AZA:
+        Description: null
+        Name: Bmw Laserlicht
+      S5DAA:
+        Description: null
+        Name: Passenger Airbag Disable
+      S5DNA:
+        Description: null
+        Name: Parking Assistant Plus
+      S610A:
+        Description: null
+        Name: Head-Up Display
+      S645A:
+        Description: null
+        Name: Radio-Steuerung Us
+      S654A:
+        Description: null
+        Name: Dab Tuner
+      S655A:
+        Description: null
+        Name: Satellitentuner
+      S676A:
+        Description: null
+        Name: Hifi Lautsprechersystem
+      S688A:
+        Description: null
+        Name: Harman/Kardon Surround S
+      S6ACA:
+        Description: null
+        Name: Intelligenter Notruf
+      S6AEA:
+        Description: null
+        Name: Teleservices
+      S6AKA:
+        Description: null
+        Name: Connecteddrive Services
+      S6C4A:
+        Description: null
+        Name: Connected Package Profes
+      S6CPA:
+        Description: null
+        Name: Smartphone Integration
+      S6NWA:
+        Description: null
+        Name: Telefonie Mit Wireless C
+      S6U3A:
+        Description: null
+        Name: Bmw Live Cockpit Profess
+      S6U8A:
+        Description: null
+        Name: Bmw Gestiksteuerung
+      S6WDA:
+        Description: null
+        Name: Wlan Hotspot
+      S700A:
+        Description: null
+        Name: Area-Code 4
+      S710A:
+        Description: null
+        Name: M-Lederlenkrad
+      S715A:
+        Description: null
+        Name: M Aerodynamikpaket
+      S760A:
+        Description: null
+        Name: M Hochglanz Shadow Line
+      S775A:
+        Description: null
+        Name: M Dachhimmel Anthrazit
+      S823A:
+        Description: null
+        Name: Heissland-Ausfuehrung
+      S842A:
+        Description: null
+        Name: Kaltland-Ausfuehrung
+      S845A:
+        Description: null
+        Name: Akustische Gurtwarnung
+      S851A:
+        Description: null
+        Name: Sprachversion Deutsch
+      S853A:
+        Description: null
+        Name: Sprachversion Englisch
+      S879A:
+        Description: null
+        Name: Deutsch / Bordliteratur
+      S8BKA:
+        Description: null
+        Name: Ladedose Export
+      S8EBA:
+        Description: null
+        Name: Steuerung Einzelbetriebs
+      S8KAA:
+        Description: null
+        Name: Oelwartungsint. 30.000km
+      S8KLA:
+        Description: null
+        Name: Oelwartungsint.15.000km/
+      S8R9A:
+        Description: null
+        Name: Kaeltemittel
+      S8S3A:
+        Description: null
+        Name: Autom. Verriegelung Beim
+      S8SMA:
+        Description: null
+        Name: Fahrg Nr Aussen Sichtb
+      S8TFA:
+        Description: null
+        Name: Aktiver Fussgaengerschut
+      S8TNA:
+        Description: null
+        Name: Tagfahrlicht Ueber Licht
+      S8TRA:
+        Description: null
+        Name: Dekodierung Zusatzfunkti
+      S909A:
+        Description: null
+        Name: S909a Analysestecker
+      S925A:
+        Description: null
+        Name: Versandschutzpaket
+      S991A:
+        Description: null
+        Name: Steuerung Vorserie
+      S992A:
+        Description: null
+        Name: Steuerung K Zeichenbef
+      S9AAA:
+        Description: null
+        Name: Aussenhautschutz
+      S9ACA:
+        Description: null
+        Name: Tarnung Nsg Fahrzeuge
+      S9ADA:
+        Description: null
+        Name: Abschliessbare Tarnplane
+    PassengerDoor:
+      Door: Closed
+      Item:
+        ItemComment: '''gogopowerangers'''
+        ItemDistance: 0
+        Name: null
+      Window: Closed
+    PassengerRearDoor:
+      Door: Closed
+      Item:
+        ItemComment: ''
+        ItemDistance: 0
+        Name: null
+      Window: Closed
+    SeatLeftRow1:
+      ChildSeatModel: ''
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 'haha1'
+      OccupancyFootwell: null
+      OccupancyMovement: normal
+      OccupancySeat: Person_ID1001
+      SeatPosition:
+        BackrestTilt: null
+        Position: null
+    SeatLeftRow2:
+      ChildSeatModel: ''
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 'testagainto'
+      OccupancyFootwell: null
+      OccupancyMovement: normal
+      OccupancySeat: null
+      SeatPosition:
+        BackrestTilt: null
+        Position: null
+    SeatMidRow2:
+      ChildSeatModel: ''
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 'areyouoknow'
+      OccupancyFootwell: null
+      OccupancyMovement: normal
+      OccupancySeat: null
+      SeatPosition:
+        BackrestTilt: null
+        Position: null
+    SeatRightRow1:
+      ChildSeatModel: ''
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 'everyone'
+      OccupancyFootwell: null
+      OccupancyMovement: normal
+      OccupancySeat: null
+      SeatPosition:
+        BackrestTilt: null
+        Position: null
+    SeatRightRow2:
+      ChildSeatModel: ''
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 'yoyoyo'
+      OccupancyFootwell: null
+      OccupancyMovement: normal
+      OccupancySeat: null
+      SeatPosition:
+        BackrestTilt: null
+        Position: null
+    Tailgate:
+      Door: Closed
+      Item:
+        Item: 'whatthefucky'
+        ItemDistance: 0
+        Name: null
+      Window: Closed
+Version: '1.1'

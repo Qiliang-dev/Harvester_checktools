@@ -1,0 +1,147 @@
+Catalog: null
+TestCase:
+  Description: BMW Integration Testing HW 5.0
+  Duration: 60
+  Environment:
+    CurrentTemperature: 21
+    ExternalNoise: null
+    TestLocation: Garage
+    TestWeather: Interior
+  Filename: null
+  Name: null
+  Operator:
+    Company: BMW
+    Name: BMW's employee
+  Sensors:
+    Channel: 8
+    HM:
+      BLESWF: null
+      BTLDSWF: null
+      HardwareVersion: 4B05478
+      PartNumber: null
+      Position: 0
+      ProductionDate: null
+      Rotation: 0
+      SerialNumber: null
+      UWBSWF: null
+    NoiseSuppression: 0
+    SamplingRate: 24
+    SensitivityBoost: 0
+    VM:
+      BLESWF: null
+      BTLDSWF: null
+      HardwareVersion: null
+      PartNumber: null
+      Position: 0
+      ProductionDate: null
+      Rotation: 0
+      SerialNumber: null
+      UWBSWF: null
+  TestNotes: 'Test'
+  Time: null
+  Vehicle:
+    CarModel:
+      Model: BMW
+      RHD: false
+      VIN: 5UXTS1C06L9C44150
+      Variant: G01
+    DriverDoor:
+      Door: Closed
+      Item:
+        ItemComment: 'areyouOK'
+        ItemDistance: 0
+        ItemMovement: null
+        Name: null
+      Window: Closed
+    DriverRearDoor:
+      Door: Closed
+      Item:
+        ItemComment: '''nihaoma'''
+        ItemDistance: 0
+        ItemMovement: null
+        Name: null
+      Window: Closed
+    Engine:
+      State: Stopped
+      Type: Hybrid
+    OptionalEquipment: null
+    PassengerDoor:
+      Door: Closed
+      Item:
+        Item: 'whatthefucky'
+        ItemDistance: 0
+        ItemMovement: null
+        Name: null
+      Window: Closed
+    PassengerRearDoor:
+      Door: Closed
+      Item:
+        Item: 'whatthefucky'
+        ItemDistance: 0
+        ItemMovement: null
+        Name: null
+      Window: Closed
+    SeatLeftRow1:
+      ChildSeatModel: ''
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 'haha1'
+      OccupancyFootwell: null
+      OccupancyMovement: null
+      OccupancySeat: null
+      SeatBeltStatus: Open
+      SeatPosition:
+        BackrestTilt: Straight
+        Position: Mid
+    SeatLeftRow2:
+      ChildSeatModel: ''
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 'testagainto'
+      OccupancyFootwell: null
+      OccupancyMovement: null
+      OccupancySeat: null
+      SeatBeltStatus: Open
+      SeatPosition:
+        BackrestTilt: Straight
+        Position: Mid
+    SeatMidRow2:
+      ChildSeatModel: ''
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 'areyouoknow'
+      OccupancyFootwell: null
+      OccupancyMovement: null
+      OccupancySeat: null
+      SeatBeltStatus: Open
+      SeatPosition:
+        BackrestTilt: Straight
+        Position: Mid
+    SeatRightRow1:
+      ChildSeatModel: ''
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 'everyone'
+      OccupancyFootwell: null
+      OccupancyMovement: null
+      OccupancySeat: null
+      SeatBeltStatus: Open
+      SeatPosition:
+        BackrestTilt: Straight
+        Position: Mid
+    SeatRightRow2:
+      ChildSeatModel: ''
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 'yoyoyo'
+      OccupancyFootwell: null
+      OccupancyMovement: null
+      OccupancySeat: null
+      SeatBeltStatus: Open
+      SeatPosition:
+        BackrestTilt: Straight
+        Position: Mid
+    Tailgate:
+      Door: Closed
+      Item:
+        Item: 'whatthefucky'
+        ItemDistance: 0
+        ItemMovement: null
+        Name: null
+      Window: Closed
+Version: '1.2'
