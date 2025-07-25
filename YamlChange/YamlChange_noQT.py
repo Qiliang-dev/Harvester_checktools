@@ -606,6 +606,19 @@ class YamlEditorApp:
             for file_name, yaml_data in self.yaml_files.items():
                 with open(file_name, 'r', encoding='utf-8') as f:
                     lines = f.readlines()
+                
+                # === 插入主分类简单值处理 ===
+                if selected_main and not selected_sub and not selected_prop and not selected_item_prop:
+                    for i, line in enumerate(lines):
+                        if line.strip().startswith(f"{selected_main}:"):
+                            indent = len(line) - len(line.lstrip())
+                            indent_str = ' ' * indent
+                            lines[i] = f"{indent_str}{selected_main}: {new_value_single_line}\n"
+                            break
+                    with open(file_name, 'w', encoding='utf-8') as f:
+                        f.writelines(lines)
+                    yaml_data['TestCase'][selected_main] = new_value_single_line
+                    continue  # 处理下一个文件
 
                 modified = False
                 prop_line_index = -1
