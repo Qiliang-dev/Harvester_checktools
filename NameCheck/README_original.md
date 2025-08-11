@@ -1,62 +1,89 @@
-# NameCheck 文件名检查工具 - 原始单文件版本
+# NameCheck File Name Check Tool - Original Single File Version
 
-## 项目说明
+## Project Description
 
-这是一个文件名检查工具，用于比较Excel文件中的文件名与文件夹中的文件，检查文件完整性。
+This is a file name check tool used to compare filenames in Excel files with files in folders, and check file completeness.
 
-## 功能特性
+## Features
 
-- 选择Excel文件和文件夹进行比较
-- 支持Excel多Sheet选择
-- 检查文件完整性（每个测试编号应有4个文件）
-- 检测重复文件名
-- 显示比较结果
-- 支持为文件名添加后缀
-- 支持复制结果（保留换行或单行格式）
+- Select Excel files and folders for comparison
+- Support Excel multi-Sheet selection
+- Check file completeness (each test number should have 4 files)
+- **NEW**: Customizable file count requirement (default: 4, user can change)
+- Detect duplicate filenames
+- Display comparison results
+- Support adding suffixes to filenames
+- Support copying results (keep line breaks or single line format)
+- **NEW**: Show file count for each category
+- **NEW**: Automatic time-based sorting of all results
 
-## 文件结构
+## File Structure
 
 ```
 NameCheck/
-├── NameCheck_original.py    # 还原后的单文件版本
-├── requirements.txt         # Python依赖包
-└── README_original.md      # 本说明文档
+├── NameCheck_original.py    # Restored single file version
+├── requirements.txt         # Python dependencies
+└── README_original.md      # This documentation
 ```
 
-## 安装依赖
+## Installation
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 使用方法
+## Usage
 
-1. 直接运行Python文件：
+1. Run Python file directly:
    ```bash
    python NameCheck_original.py
    ```
 
-2. 在程序界面中：
-   - 选择Excel文件（.xlsx格式）
-   - 选择要比较的Sheet
-   - 选择要比较的文件夹
-   - 点击"开始比较"按钮
+2. In the program interface:
+   - Select Excel file (.xlsx format)
+   - Select Sheet to compare
+   - Select folder to compare
+   - Click "Start Comparison" button
 
-## 文件名格式要求
+## Filename Format Requirements
 
-程序会识别符合以下格式的文件名：
-- 格式：`20xx_xx_xx_xxxxxx`
-- 示例：`2024_01_15_123456`
+The program recognizes filenames matching the following format:
+- Format: `20xx_xx_xx_xxxxxx`
+- Example: `2024_01_15_123456`
 
-## 系统要求
+## New File Count Feature
+
+The program now displays the count of files/numbers for each category:
+- "In Excel but not in folder (X files):" - Shows how many files are missing from folder
+- "In folder but not in Excel (X files):" - Shows how many extra files are in folder
+- "Incomplete file numbers (less than X files) (Y numbers):" - Shows how many test numbers are incomplete
+- "Duplicate filenames found in Excel (X duplicates):" - Shows how many duplicates exist
+
+## Customizable File Count Requirement
+
+- **Default setting**: 4 files per test number
+- **Customizable**: Users can change this number in the interface
+- **Input validation**: Ensures the number is valid and greater than 0
+- **Dynamic results**: All messages and checks update based on the custom setting
+
+## Time-Based Sorting Feature
+
+- **Automatic sorting**: All file numbers are automatically sorted by time order
+- **Sorting rules**: 
+  - First priority: Date (from early to late)
+  - Second priority: Number (from small to large within the same date)
+- **Example**: `2024_01_15_123456` → `2024_01_15_456789` → `2024_01_16_123456`
+- **Applied to**: All result categories (missing files, extra files, incomplete files, duplicates)
+
+## System Requirements
 
 - Python 3.6+
-- tkinter（通常随Python安装）
+- tkinter (usually installed with Python)
 - pandas
 - openpyxl
 
-## 注意事项
+## Notes
 
-- 确保Excel文件格式为.xlsx
-- 文件夹中应包含要比较的文件
-- 每个测试编号通常需要4个相关文件
+- Ensure Excel file format is .xlsx
+- Folder should contain files to compare
+- Each test number typically needs 4 related files
