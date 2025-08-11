@@ -1,0 +1,11 @@
+# Task ID: 15
+# Title: 打包和部署
+# Status: pending
+# Dependencies: 5 (Not found), 13 (Not found)
+# Priority: low
+# Description: 完善打包配置和部署流程
+# Details:
+优化PyInstaller配置，创建安装程序，建立自动化部署流程
+
+# Test Strategy:
+在不同操作系统上测试打包后的应用程序

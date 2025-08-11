@@ -1,0 +1,11 @@
+# Task ID: 5
+# Title: 统一管理界面开发
+# Status: pending
+# Dependencies: 1 (Not found), 2 (Not found), 3 (Not found), 4 (Not found)
+# Priority: high
+# Description: 创建主控制台界面，集成所有工具功能
+# Details:
+开发一个统一的管理界面，集成YAML分类器、NameCheck、YAML转换、文件排序等所有工具
+
+# Test Strategy:
+测试各个工具的集成和界面交互

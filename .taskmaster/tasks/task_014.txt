@@ -1,0 +1,11 @@
+# Task ID: 14
+# Title: 测试框架和自动化测试
+# Status: pending
+# Dependencies: 1 (Not found), 2 (Not found), 3 (Not found), 4 (Not found)
+# Priority: medium
+# Description: 建立完整的测试框架和自动化测试
+# Details:
+开发单元测试、集成测试、端到端测试，建立自动化测试流程
+
+# Test Strategy:
+运行完整的测试套件验证所有功能

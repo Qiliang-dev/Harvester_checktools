@@ -1,0 +1,11 @@
+# Task ID: 1
+# Title: YAML分类器功能优化
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: 改进现有的yaml_classifier.py工具，提高分类准确性和用户体验
+# Details:
+分析当前yaml_classifier.py的代码，识别需要改进的地方，包括分类算法优化、界面改进、错误处理等
+
+# Test Strategy:
+使用现有的YAML文件进行测试，验证分类结果的准确性

@@ -1,0 +1,11 @@
+# Task ID: 6
+# Title: 核心文件处理引擎
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: 建立统一的文件读写接口和数据解析引擎
+# Details:
+开发核心的文件处理模块，统一处理YAML、Excel等格式的读写操作，提供标准化的API接口
+
+# Test Strategy:
+编写单元测试验证各种文件格式的处理功能
