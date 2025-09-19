@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, filedialog
+from tkinter import ttk, filedialog, messagebox
 import os
 import yaml
 from typing import Dict, List
@@ -97,9 +97,12 @@ class YamlEditorApp:
         # Update button
         ttk.Button(main_frame, text="Update value", command=self.update_value).grid(row=8, column=0, columnspan=2, pady=10)
         
+        # Vehicle replacement button
+        ttk.Button(main_frame, text="Batch Vehicle Replacer", command=self.open_vehicle_replacer).grid(row=9, column=0, columnspan=2, pady=5)
+        
         # Status bar
         self.status_var = tk.StringVar()
-        ttk.Label(main_frame, textvariable=self.status_var).grid(row=9, column=0, columnspan=2, pady=5)
+        ttk.Label(main_frame, textvariable=self.status_var).grid(row=10, column=0, columnspan=2, pady=5)
 
     def reset_all_fields(self):
         # Reset all selection fields
@@ -719,6 +722,17 @@ class YamlEditorApp:
     def on_text_change(self, event=None):
         # no longer limit the editing behavior, allow free editing of multi-line content
         pass
+    
+    def open_vehicle_replacer(self):
+        """Open Vehicle Content Replacer"""
+        try:
+            from vehicle_replacer import BatchVehicleReplacerGUI
+            replacer_window = tk.Toplevel(self.root)
+            BatchVehicleReplacerGUI(replacer_window)
+        except ImportError as e:
+            messagebox.showerror("Error", f"Cannot import Vehicle replacer module: {str(e)}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to open Vehicle replacer: {str(e)}")
 
 
 def main():

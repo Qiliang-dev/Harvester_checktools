@@ -1,0 +1,348 @@
+Version: '1.4'
+TestCase:
+  Name: 2025_04_26_001709_DA00097_A
+  Description: CPDSML-992
+  Time: 26/04/2025 00:17:09
+  TestNotes: ''
+  Environment:
+    TestLocation: Garage
+    TestWeather: null
+    TestWeatherIntensity: null
+    CurrentTemperature: 20
+    ExternalNoise: null
+  Operator:
+    Name: 'DEV: more reworked 4A systems newborn dummy'
+    Company: BMW
+  Duration: 15
+  Filename: 2025_04_26_001709_DA00097_A.blf
+  Vehicle:
+    CarModel:
+      Model: BMW
+      Variant: NA0
+      VIN: WBA31JB00RH022296
+      RHD: false
+    OptionalEquipment:
+      S230A:
+        Name: "Eu Spezifische Zusatzumf"
+        Description: null
+      S248A:
+        Name: Lenkradheizung
+        Description: null
+      S2VBA:
+        Name: Reifendruckanzeige
+        Description: null
+      S2VCA:
+        Name: Reifenreparatur-Set
+        Description: null
+      S2Y3A:
+        Name: "Nsg Bereifung 3"
+        Description: null
+      S302A:
+        Name: Alarmanlage
+        Description: null
+      S320A:
+        Name: "Modellschriftzug Entfall"
+        Description: null
+      S3DPA:
+        Name: "Bmw Iconic Glow Ext.Pak."
+        Description: null
+      S3DZA:
+        Name: "Entfall Zusatz-Schriftzu"
+        Description: null
+      S420A:
+        Name: "Darkened Glass"
+        Description: null
+      S428A:
+        Name: Warndreieck
+        Description: null
+      S479A:
+        Name: "Kindersitzbef. Beifahr."
+        Description: null
+      S494A:
+        Name: "Sitzheizung Fuer Fa/Bf"
+        Description: null
+      S4T2A:
+        Name: "Ladekabel Prof. (Mode 3)"
+        Description: null
+      S4U6A:
+        Name: "Ac-Laden Professional"
+        Description: null
+      S534A:
+        Name: Klimaautomatik
+        Description: null
+      S548A:
+        Name: Kilometertacho
+        Description: null
+      S5ATA:
+        Name: "Driving Assistant Plus"
+        Description: null
+      S5AUA:
+        Name: "Driving Assistant Profes"
+        Description: null
+      S5AVA:
+        Name: "Active Guard"
+        Description: null
+      S5DWA:
+        Name: "Parking Assistant Profes"
+        Description: null
+      S61BA:
+        Name: "Bmw Panoramic Vision"
+        Description: null
+      S654A:
+        Name: "Dab Tuner"
+        Description: null
+      S674A:
+        Name: "Hifi-System Harman/Kardo"
+        Description: null
+      S6AEA:
+        Name: Teleservices
+        Description: null
+      S6AFA:
+        Name: "Gesetzlicher Notruf"
+        Description: null
+      S6NXA:
+        Name: "Ablage Fuer Wireless Cha"
+        Description: null
+      S851A:
+        Name: "Sprachversion Deutsch"
+        Description: null
+      S879A:
+        Name: "Deutsch / Bordliteratur"
+        Description: null
+      S8EBA:
+        Name: "Steuerung Einzelbetriebs"
+        Description: null
+      S8R3A:
+        Name: "Coc Zusatzumfaenge"
+        Description: null
+      S8R9A:
+        Name: Kaeltemittel
+        Description: null
+      S909A:
+        Name: "S909a Analysestecker"
+        Description: null
+      S90AA:
+        Name: "Mob. Prot. Data Record."
+        Description: null
+      S991A:
+        Name: "Steuerung Vorserie"
+        Description: null
+      S9ACA:
+        Name: "Tarnung Nsg Fahrzeuge"
+        Description: null
+      S9ADA:
+        Name: "Abschliessbare Tarnplane"
+        Description: null
+      V077C:
+        Name: "Rb Steuerungsthemen"
+        Description: null
+      VAIWC:
+        Name: "Anbauteile In Weiss U300"
+        Description: null
+      VAPHC:
+        Name: "Analysestecker Ean"
+        Description: null
+      VCAIC:
+        Name: "Curtainairbag Inert"
+        Description: null
+      VDNAC:
+        Name: "Not-Aus Bremsregelsystem"
+        Description: null
+      VEPNC:
+        Name: "Not-Aus Lenkung"
+        Description: null
+      VHEEC:
+        Name: "Heat Ed"
+        Description: null
+      VHS1C:
+        Name: "Verbau Hisi Konfig. 1"
+        Description: null
+      VHVEC:
+        Name: "Hvs Ed"
+        Description: null
+      VHVMC:
+        Name: "Hochvolt Monitor"
+        Description: null
+      VKS1C:
+        Name: "Verbau Vosi Konfig. 1"
+        Description: null
+      VNNVC:
+        Name: "Not-Aus Eam"
+        Description: null
+      VRFWC:
+        Name: "Bereifung 8fach Mit M+S"
+        Description: null
+      VTV2C:
+        Name: "Tvkl Konfig 2"
+        Description: null
+      VVFLC:
+        Name: Feuerloescher
+        Description: null
+      VVTLC:
+        Name: "Tarn Dyko Flk Hlk Nur T1"
+        Description: null
+      "***":
+        Name: Ausleseterminal
+        Description: null
+    Engine:
+      State: Stopped
+      Type: Electric
+    DriverDoor:
+      Door: Closed
+      Window: Closed
+      Item:
+        Name: null
+        ItemMovement: null
+        ItemComment: 
+        ItemDistance: 0
+    PassengerDoor:
+      Door: Closed
+      Window: Closed
+      Item:
+        Name: null
+        ItemMovement: null
+        ItemComment: 
+        ItemDistance: 0
+    DriverRearDoor:
+      Door: Closed
+      Window: Closed
+      Item:
+        Name: null
+        ItemMovement: null
+        ItemComment: 
+        ItemDistance: 0
+    PassengerRearDoor:
+      Door: Closed
+      Window: Closed
+      Item:
+        Name: null
+        ItemMovement: null
+        ItemComment: 
+        ItemDistance: 0
+    Tailgate:
+      Door: Closed
+      Window: Closed
+      Item:
+        Name: null
+        ItemMovement: null
+        ItemComment: 
+        ItemDistance: 0
+    Hood:
+      Door: Closed
+      Window: Closed
+      Item:
+        Name: null
+        ItemMovement: null
+        ItemComment: 
+        ItemDistance: 0
+    SeatLeftRow1:
+      SeatPosition:
+        BackrestTilt: Straight
+        Position: Mid
+      OccupancySeat: null
+      OccupancyFootwell: null
+      ChildSeatModel: 
+      OccupancyMovement: null
+      SeatBeltStatus: Open
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 
+    SeatLeftRow2:
+      SeatPosition:
+        BackrestTilt: Straight
+        Position: Mid
+      OccupancySeat: null
+      OccupancyFootwell: null
+      ChildSeatModel: 
+      OccupancyMovement: null
+      SeatBeltStatus: Open
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 
+    SeatRightRow1:
+      SeatPosition:
+        BackrestTilt: Straight
+        Position: Mid
+      OccupancySeat: null
+      OccupancyFootwell: null
+      ChildSeatModel: 
+      OccupancyMovement: null
+      SeatBeltStatus: Open
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 
+    SeatRightRow2:
+      SeatPosition:
+        BackrestTilt: Straight
+        Position: Mid
+      OccupancySeat: null
+      OccupancyFootwell: null
+      ChildSeatModel: 
+      OccupancyMovement: null
+      SeatBeltStatus: Open
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 
+    SeatMidRow2:
+      SeatPosition:
+        BackrestTilt: Straight
+        Position: Mid
+      OccupancySeat: null
+      OccupancyFootwell: null
+      ChildSeatModel: 
+      OccupancyMovement: null
+      SeatBeltStatus: Open
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 
+    Dashboard:
+      SeatPosition:
+        BackrestTilt: null
+        Position: null
+      OccupancySeat: null
+      OccupancyFootwell: null
+      ChildSeatModel: 
+      OccupancyMovement: null
+      SeatBeltStatus: null
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 
+    Trunk:
+      SeatPosition:
+        BackrestTilt: null
+        Position: null
+      OccupancySeat: null
+      OccupancyFootwell: null
+      ChildSeatModel: 
+      OccupancyMovement: null
+      SeatBeltStatus: null
+      ChildSeatOrientation: NotInstalled
+      OccupancyComment: 
+  Sensors:
+    SamplingRate: 96
+    Channel: 9
+    SensitivityBoost: 0
+    NoiseSuppression: 1
+    VM:
+      Position: 0
+      Rotation: 0
+      HardwareVersion: 005.000.000
+      BTLDSWF: 014.020.010
+      BLESWF: 014.020.010
+      UWBSWF: 014.020.011
+      PartNumber: 4A2B750-48
+      ProductionDate: 7 059-00
+      SerialNumber: '0'
+    HM:
+      Position: 0
+      Rotation: 0
+      HardwareVersion: 005.000.000
+      BTLDSWF: 014.020.010
+      BLESWF: 000.000.000
+      UWBSWF: 014.020.011
+      PartNumber: 4A2B750-48
+      ProductionDate: 7 059-00
+      SerialNumber: '0'
+Catalog:
+  Persons:
+  - Name: Person_ID8930
+    Age: 22
+    Gender: Female
+    Height: 167
+    Weight: 53
+    ShoulderWidth: 38
+    SeatingHeight: 80
